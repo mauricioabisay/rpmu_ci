@@ -1,0 +1,20 @@
+version: '2'
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=ci
+      - MYSQL_USER=ci
+      - MYSQL_PASSWORD=ci
+    ports:
+      - 3306:3306
+  web:
+    build:
+      context: .
+    ports:
+      - 80:80
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
