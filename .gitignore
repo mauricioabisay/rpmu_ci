@@ -10,7 +10,7 @@ application/logs/*
 
 application/ci_sessions/
 
-
+application/config/config.php
 
 composer.lock
 
