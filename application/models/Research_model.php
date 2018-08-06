@@ -12,13 +12,24 @@ class Research_model extends CI_Model
 		$this->load->database();
 	}
 
-	public function get( $start = false, $end  = false ) {
-		if ( $start && $end ) {
-			$query = $this->db->get( $this->table, $start, $end );
+	public function get( $start = -1, $items_per_page = false ) {
+		if ( $start >= 0 ) {
+			if ( $items_per_page ) {
+				$this->db->limit( $items_per_page, $start );
+			} else {
+				$this->db->limit( $this->config->item('public_items_per_page'), $start );
+			}
+			
+			$query = $this->db->get( $this->table );
 		} else {
-			$query = $this->db->get( $this->table );	
+			$query = $this->db->get( $this->table );
 		}
 		return $query->result();
+	}
+
+	public function getCount() {
+		$query = $this->db->get( $this->table );
+		return $query->num_rows();
 	}
 
 	public function getByParticipant($participant_id) {
@@ -35,7 +46,36 @@ class Research_model extends CI_Model
 		return $researches;
 	}
 
-	public function getByFaculty($slug) {
+	public function getByFaculty($slug, $start = -1) {
+		$researches = array();
+		$sql = 'SELECT research_id FROM research_participant, ';
+		$sql.= '( (SELECT participants.id as id ';
+		$sql.= 'FROM participants, users ';
+		$sql.= 'WHERE users.id=participants.user_id ';
+		$sql.= 'AND participants.user_id is not null ';
+		$sql.= 'AND faculty_slug="'.$slug.'") ';
+		$sql.= 'UNION ';
+		$sql.= '(SELECT participants.id as id ';
+		$sql.= 'FROM participants, degrees ';
+		$sql.= 'WHERE degree_slug=degrees.slug ';
+		$sql.= 'AND faculty_slug="'.$slug.'") ) as c ';
+		$sql.= 'WHERE participant_id=id ';
+		$sql.= 'GROUP BY research_id ';
+
+		if ( $start >= 0 ) {
+			$sql.= 'LIMIT '.$start.','.$this->config->item('public_items_per_page');
+		}
+
+		$query = $this->db->query($sql);
+		if ( $query->num_rows() > 0 ) {
+			foreach ($query->result() as $r) {
+				$researches[] = $this->db->get_where('researches', array('id' => $r->research_id))->row();
+			}
+		}
+		return $researches;		
+	}
+
+	public function getByFacultyCount($slug) {
 		$researches = array();
 		$sql = 'SELECT research_id FROM research_participant, ';
 		$sql.= '( (SELECT participants.id as id ';
@@ -52,19 +92,19 @@ class Research_model extends CI_Model
 		$sql.= 'GROUP BY research_id ';
 
 		$query = $this->db->query($sql);
-		if ( $query->num_rows() > 0 ) {
-			foreach ($query->result() as $r) {
-				$researches[] = $this->db->get_where('researches', array('id' => $r->research_id))->row();
-			}
-		}
-		return $researches;		
+		
+		return $query->num_rows();		
 	}
 
-	public function getByDegree($slug) {
+	public function getByDegree($slug, $start = -1) {
 		$researches = array();
 		$sql = 'SELECT research_id as id FROM research_participant, participants ';
 		$sql.= 'WHERE participant_id = participants.id ';
 		$sql.= 'AND degree_slug = "'.$slug.'" ';
+
+		if ( $start >= 0 ) {
+			$sql.= 'LIMIT '.$start.','.$this->config->item('public_items_per_page');
+		}
 
 		$query = $this->db->query($sql);
 		if ( $query->num_rows() > 0 ) {
@@ -73,6 +113,16 @@ class Research_model extends CI_Model
 			}
 		}
 		return $researches;
+	}
+
+	public function getByDegreeCount($slug) {
+		$researches = array();
+		$sql = 'SELECT research_id as id FROM research_participant, participants ';
+		$sql.= 'WHERE participant_id = participants.id ';
+		$sql.= 'AND degree_slug = "'.$slug.'" ';
+
+		$query = $this->db->query($sql);
+		return $query->num_rows();
 	}
 
 	public function countByDegree($slug) {

@@ -114,6 +114,9 @@
 		.rpm-citations-tab .rpm-dynamic-list-item .rpm-citation-file {
 			display: none;
 		}
+		.rpm-pagination .pagination {
+			justify-content: center;
+		}
 	</style>
 </head>
 <body>
@@ -122,7 +125,7 @@
 		<?php if ( isset($this->session->user) ) : ?>
 			<a class="navbar-brand" href="<?php echo site_url('admin') ?>">R.P.M.</a>
 		<?php else : ?>
-			<a class="navbar-brand" href="#">R.P.M.</a>
+			<a class="navbar-brand" href="<?php echo site_url('welcome');?>">R.P.M.</a>
 		<?php endif; ?>
 		
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-content" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

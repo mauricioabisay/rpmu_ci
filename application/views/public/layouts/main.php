@@ -241,6 +241,8 @@
 				<a href="<?php echo site_url('welcome/research') ;?>"><h5>Investigaciones</h5></a>
 				<a href="<?php echo site_url('welcome/faculty') ;?>"><h5>Facultades</h5></a>
 				<a href="<?php echo site_url('welcome/researcher') ;?>"><h5>Investigadores</h5></a>
+				<hr>
+				<a href="<?php echo site_url('admin') ;?>"><h5>Acceder</h5></a>
 			</div>
 		</div>
 	</div>

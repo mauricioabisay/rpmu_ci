@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
 
+	public $pag_config;
+
 	public function __construct() {
 		parent::__construct();
 
@@ -17,16 +19,44 @@ class Welcome extends CI_Controller {
 		$this->load->model('user_model');
 		$this->load->model('faculty_model');
 		$this->load->model('degree_model');
+
+		$this->pag_config = array(
+			'per_page' => $this->config->item('public_items_per_page'),
+			'full_tag_open' => '<ul class="pagination">',
+			'full_tag_close' => '</ul>',
+			'num_tag_open' => '<li class="page-item"><span class="page-link">',
+			'num_tag_close' => '</span></li>',
+			'prev_tag_open' => '<li class="page-item"><span class="page-link">',
+			'prev_tag_close' => '</span></li>',
+			'next_tag_open' => '<li class="page-item"><span class="page-link">',
+			'next_tag_close' => '</span></li>',
+			'cur_tag_open' => '<li class="page-item active"><span class="page-link">',
+			'cur_tag_close' => '</span></li>',
+			'first_link' => 'Inicio',
+			'first_tag_open' => '<li class="page-item"><span class="page-link">',
+			'first_tag_close' => '</span></li>',
+			'last_link' => 'Fin',
+			'last_tag_open' => '<li class="page-item"><span class="page-link">',
+			'last_tag_close' => '</span></li>'
+		);
 	}
 
 	public function index() {
-		$researches = $this->research_model->get();
+		
+		$start_at = $this->uri->segment(3) ? $this->uri->segment(3) : 0 ;
+		$researches = $this->research_model->get( $start_at );
+		
 		foreach ($researches as $r) {
 			$leader = $this->research_model->leader($r->id);
 			$r->leader = $this->user_model->find($leader->user_id);
 			$r->leader->participant = $leader;
 			$r->faculty = $this->faculty_model->find($r->leader->faculty_slug);
 		}
+
+		$this->pag_config['base_url'] = site_url('/welcome/index/');
+		$this->pag_config['total_rows'] = $this->research_model->getCount();
+		$this->pagination->initialize($this->pag_config);
+
 		$this->load->view('public/home', compact('researches'));
 	}
 
@@ -42,26 +72,42 @@ class Welcome extends CI_Controller {
 			$this->load->view('public/faculty-list', compact('faculties'));
 		} else {
 			$faculty = $this->faculty_model->find($slug);
-			$researches = $this->research_model->getByFaculty($slug);
+
+			$start_at = $this->uri->segment(4) ? $this->uri->segment(4) : 0 ;
+			$researches = $this->research_model->getByFaculty($slug, $start_at);
+
 			foreach ($researches as $r) {
 				$leader = $this->research_model->leader($r->id);
 				$r->leader = $this->user_model->find($leader->user_id);
 				$r->leader->participant = $leader;
 				$r->faculty = $this->faculty_model->find($r->leader->faculty_slug);
 			}
+
+			$this->pag_config['base_url'] = site_url('/welcome/faculty/'.$slug.'/');
+			$this->pag_config['total_rows'] = $this->research_model->getByFacultyCount($slug);
+			$this->pagination->initialize($this->pag_config);
+
 			$this->load->view('public/faculty', compact('faculty', 'researches'));
 		}
 	}
 
 	public function degree($slug) {
 		$degree = $this->degree_model->find($slug);
-		$researches = $this->research_model->getByDegree($slug);
+
+		$start_at = $this->uri->segment(4) ? $this->uri->segment(4) : 0;
+		$researches = $this->research_model->getByDegree($slug, $start_at);
+
 		foreach ($researches as $r) {
 			$leader = $this->research_model->leader($r->id);
 			$r->leader = $this->user_model->find($leader->user_id);
 			$r->leader->participant = $leader;
 			$r->faculty = $this->faculty_model->find($r->leader->faculty_slug);
 		}
+
+		$this->pag_config['base_url'] = site_url('/welcome/degree/'.$slug.'/');
+		$this->pag_config['total_rows'] = $this->research_model->getByDegreeCount($slug);
+		$this->pagination->initialize($this->pag_config);
+
 		$this->load->view('public/degree', compact('degree', 'researches'));
 	}
 

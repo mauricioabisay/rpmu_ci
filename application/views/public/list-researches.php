@@ -13,3 +13,7 @@
 	</div>
 <?php endforeach ?>
 </div>
+
+<div class="rpm-pagination">
+	<?php echo $this->pagination->create_links();?>
+</div>

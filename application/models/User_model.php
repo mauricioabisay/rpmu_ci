@@ -12,13 +12,19 @@ class User_model extends CI_Model
 		$this->load->database();
 	}
 
-	public function get( $start = false, $end  = false ) {
-		if ( $start && $end ) {
-			$query = $this->db->get( $this->table, $start, $end );
-		} else {
-			$query = $this->db->get( $this->table );	
+	public function get( $start = -1, $items_per_page  = false ) {
+		if ( $start >= 0 && $items_per_page ) {
+			$this->db->limit( $items_per_page, $start );
 		}
+
+		$query = $this->db->get( $this->table );	
+		
 		return $query->result();
+	}
+
+	public function getCount() {
+		$query = $this->db->get( $this->table );
+		return $query->num_rows();
 	}
 
 	public function insert($data) {

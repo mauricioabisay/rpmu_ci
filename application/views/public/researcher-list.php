@@ -4,7 +4,7 @@
 	<div class="row">
 	<?php foreach ( $participants as $participant ) : ?>
 		<div class="col-4 rpm-participant">
-			<div class="thumb"></div>
+			<a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><div class="thumb"></div></a>
 			<a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><h5><?php echo $participant->name;?></h5></a>
 			<?php if ($participant->degree) : ?>
 				<h6><?php echo $participant->degree->title;?></h6>

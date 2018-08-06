@@ -16,7 +16,34 @@ class Participant extends CI_Controller
 	}
 
 	public function index() {
-		$participants = $this->participant_model->get();
+		$total_rows = $this->participant_model->getCount();
+		$pag_config = array(
+			'per_page' => $this->config->item('admin_items_per_page'),
+			'full_tag_open' => '<ul class="pagination">',
+			'full_tag_close' => '</ul>',
+			'num_tag_open' => '<li class="page-item"><span class="page-link">',
+			'num_tag_close' => '</span></li>',
+			'prev_tag_open' => '<li class="page-item"><span class="page-link">',
+			'prev_tag_close' => '</span></li>',
+			'next_tag_open' => '<li class="page-item"><span class="page-link">',
+			'next_tag_close' => '</span></li>',
+			'cur_tag_open' => '<li class="page-item active"><span class="page-link">',
+			'cur_tag_close' => '</span></li>',
+			'first_link' => 'Inicio',
+			'first_tag_open' => '<li class="page-item"><span class="page-link">',
+			'first_tag_close' => '</span></li>',
+			'last_link' => 'Fin',
+			'last_tag_open' => '<li class="page-item"><span class="page-link">',
+			'last_tag_close' => '</span></li>',
+			'base_url' => site_url('/participant/index/'),
+			'total_rows' => $total_rows,
+			'num_links' => ceil( $total_rows/$this->config->item('admin_items_per_page') )
+		);
+		$this->pagination->initialize($pag_config);
+
+		$start_at = $this->uri->segment(3) ? $this->uri->segment(3) : 0 ;
+		$participants = $this->participant_model->get($start_at, $pag_config['per_page']);
+
 		foreach ($participants as $p) {
 			$p->user = $this->user_model->find($p->user_id);
 			if($p->user_id <= 0) {

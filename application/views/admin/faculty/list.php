@@ -21,4 +21,7 @@
 			<?php endforeach; ?>
 		</tbody>
 	</table>
+	<div class="rpm-pagination">
+		<?php echo $this->pagination->create_links();?>
+	</div>
 <?php $this->load->view('admin/layouts/footer'); ?>
