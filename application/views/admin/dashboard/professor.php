@@ -1,9 +1,8 @@
-@extends('layouts.main')
+<?php $this->load->view('admin/layouts/main')?>
 
-@section('content')
 <div class="row">
 	<div class="col">
-		<p>Bienvenido Profesor {{ Auth::user()->name }}</p>
+		<p>Bienvenido <?php echo $this->session->user->participant->name;?></p>
 	</div>
 </div>
 
@@ -36,7 +35,7 @@
                 datasets: [{
                     label: 'Dataset',
                     backgroundColor: ['#aaa', '#afa', '#faa'],
-                    data: {!! $researches_by_status_data !!}
+                    data: <?php echo $researches_by_status;?>
                 }]
             },
             options: {
@@ -51,17 +50,17 @@
         {
             type: 'horizontalBar',
             data: {
-                labels: {!! $researches_objectives['labels'] !!},
+                labels: <?php echo $researches_goals['labels'];?>,
                 datasets: [
                     {
-                        label: 'Pendientes',
-                        data: {!! $researches_objectives['pending'] !!},
-                        backgroundColor: '#aaa'
+                        label: 'Cumplidos',
+                        data: <?php echo $researches_goals['achieved'];?>,
+                        backgroundColor: '#afa'
                     },
                     {
-                        label: 'Cumplidos',
-                        data: {!! $researches_objectives['completed'] !!},
-                        backgroundColor: '#afa'
+                        label: 'Pendientes',
+                        data: <?php echo $researches_goals['pending'];?>,
+                        backgroundColor: '#aaa'
                     }
                 ]
             },
@@ -79,4 +78,4 @@
     );
 </script>
 
-@endsection
+<?php $this->load->view('admin/layouts/footer');?>

@@ -282,5 +282,110 @@ class Research_model extends CI_Model
 		$this->db->delete('research_participant');
 	}
 
+	public function getByStatus() {
+		$sql = 'SELECT count(*) as counter, status FROM researches ';
+		$sql.= 'GROUP BY status ';
+
+		$query = $this->db->query($sql);
+
+		return $query->result();
+	}
+
+	public function getByStatusAndFacultyCount($status = false, $faculty_slug = false) {
+		$sql = 'SELECT count(*) as counter, fl.status as status, fl.faculty_slug as faculty_slug, f.title as faculty_title FROM ';
+		$sql.= '(SELECT ul.id as id, ul.status as status, u.faculty_slug as faculty_slug FROM ';
+		$sql.= '(SELECT pl.id as id, pl.status as status, p.user_id as user_id FROM ';
+		$sql.= '(SELECT r.id, r.status, rp.participant_id as participant_id FROM researches as r, research_participant as rp WHERE rp.research_id = r.id AND rp.role="leader" ';
+		if ( $status ) {
+			$sql.= 'AND status = "'.$status.'" ';
+		}
+		$sql.= ') as pl, participants as p ';
+		$sql.= 'WHERE p.id = pl.participant_id) as ul, users as u ';
+		$sql.= 'WHERE u.id = ul.user_id ';
+		if ( $faculty_slug ) {
+			$sql.= 'AND u.faculty_slug = "'.$faculty_slug.'" ';
+		}
+		$sql.= ') as fl, faculties as f ';
+		$sql.= 'WHERE f.slug = fl.faculty_slug ';
+		$sql.= 'GROUP BY faculty_slug, status ';
+		$sql.= 'ORDER BY faculty_slug asc ';
+		$query = $this->db->query($sql);
+
+		if ( $query->num_rows() > 0 ) {
+			return $query->row()->counter;
+		} else {
+			return 0;
+		}
+	}
+
+	public function getByStatusAndParticipantCount($status, $participant_id) {
+		$sql = 'SELECT count(*) as counter ';
+		$sql.= 'FROM researches as r, research_participant as rp ';
+		$sql.= 'WHERE rp.participant_id = '.$participant_id.' ';
+		$sql.= 'AND r.status = "'.$status.'" ';
+		$sql.= 'AND r.id = rp.research_id ';
+
+		$query = $this->db->query($sql);
+
+		if ( $query->num_rows() > 0 ) {
+			return $query->row()->counter;
+		} else {
+			return 0;
+		}
+	}
+
+	public function getResearchersPerformanceBoolean($faculty_slug = false) {
+		if ( $faculty_slug ) {
+			$sql = 'SELECT count(*) as c FROM (';
+			$sql.= 'SELECT p.user_id as user, count(rp.research_id) as counter FROM ';
+			$sql.= 'participants as p LEFT JOIN research_participant as rp ';
+			$sql.= 'ON rp.participant_id = p.id ';
+			$sql.= 'WHERE p.user_id is not null ';
+			$sql.= 'GROUP BY user ';
+			$sql.= ') as a, users ';
+			$sql.= 'WHERE counter > 0 ';
+			$sql.= 'AND users.id = a.user ';
+			$sql.= 'AND users.faculty_slug = "'.$faculty_slug.'" ';
+		} else {
+			$sql = 'SELECT count(*) as c FROM (';
+			$sql.= 'SELECT p.id as user, count(rp.research_id) as counter FROM ';
+			$sql.= 'participants as p LEFT JOIN research_participant as rp ';
+			$sql.= 'ON rp.participant_id = p.id ';
+			$sql.= 'WHERE p.user_id is not null ';
+			$sql.= 'GROUP BY user ';
+			$sql.= ') as a ';
+			$sql.= 'WHERE counter > 0 ';
+		}
+		
+		$query = $this->db->query($sql);
+		$performace['with_researches'] = $query->row()->c;
+		if ( $faculty_slug ) {
+			$sql = 'SELECT count(*) as c FROM (';
+			$sql.= 'SELECT p.user_id as user, count(rp.research_id) as counter FROM ';
+			$sql.= 'participants as p LEFT JOIN research_participant as rp ';
+			$sql.= 'ON rp.participant_id = p.id ';
+			$sql.= 'WHERE p.user_id is not null ';
+			$sql.= 'GROUP BY user ';
+			$sql.= ') as a, users ';
+			$sql.= 'WHERE counter = 0 ';
+			$sql.= 'AND users.id = a.user ';
+			$sql.= 'AND users.faculty_slug = "'.$faculty_slug.'" ';
+		} else {
+			$sql = 'SELECT count(*) as c FROM (';
+			$sql.= 'SELECT p.id as user, count(rp.research_id) as counter FROM ';
+			$sql.= 'participants as p LEFT JOIN research_participant as rp ';
+			$sql.= 'ON rp.participant_id = p.id ';
+			$sql.= 'WHERE p.user_id is not null ';
+			$sql.= 'GROUP BY user ';
+			$sql.= ') as a ';
+			$sql.= 'WHERE counter = 0 ';
+		}
+		
+		$query = $this->db->query($sql);
+		$performace['without_researches'] = $query->row()->c;
+
+		return $performace;	
+	}
+
 
 }

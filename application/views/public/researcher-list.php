@@ -4,7 +4,7 @@
 	<div class="row">
 	<?php foreach ( $participants as $participant ) : ?>
 		<div class="col-4 rpm-participant">
-			<a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><div class="thumb"></div></a>
+			<a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><div class="thumb" style="<?php echo ( file_exists('./uploads/participants/'.$participant->id.'.jpg') ) ? 'background-image: url('.base_url('uploads/participants/'.$participant->id.'.jpg)') : '';?>"></div></a>
 			<a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><h5><?php echo $participant->name;?></h5></a>
 			<?php if ($participant->degree) : ?>
 				<h6><?php echo $participant->degree->title;?></h6>

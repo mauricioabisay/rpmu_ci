@@ -108,7 +108,16 @@ class Welcome extends CI_Controller {
 		$this->pag_config['total_rows'] = $this->research_model->getByDegreeCount($slug);
 		$this->pagination->initialize($this->pag_config);
 
-		$this->load->view('public/degree', compact('degree', 'researches'));
+		$meta = (object) array(
+			'title' => $degree->title,
+			'description' => 'Investigaciones del programa académico de '.$degree->title,
+			'keywords' => 'upaep, investigacion, licenciatura, universidad, popular, autónoma, puebla, '.$degree->title,
+			'image' => base_url('uploads/image.png'),
+			'image_width' => 600,
+			'image_height' => 600
+		);
+
+		$this->load->view('public/degree', compact('degree', 'researches', 'meta'));
 	}
 
 	public function researcher($slug = false) {
@@ -143,7 +152,25 @@ class Welcome extends CI_Controller {
 					$r->leader->participant = $leader;
 					$r->faculty = $this->faculty_model->find($r->leader->faculty_slug);
 				}
-				$this->load->view('public/researcher', compact('researcher', 'researches'));	
+
+				$keywords = 'upaep, investigacion, licenciatura, universidad, popular, autónoma, puebla, ';
+				$keywords.= $researcher->name.', ';
+				$keywords.= ($researcher->degree) ? $researcher->degree->title.', ' : ', ';
+				$keywords.= $researcher->faculty->title;
+
+				$image = (file_exists('./uploads/participants/'.$researcher->id.'.jpg')) ? base_url('uploads/participants/'.$researcher->id.'.jpg') : base_url('uploads/image.png');
+				list($width, $height, $type, $attr) = getimagesize($image);
+
+				$meta = (object) array(
+					'title' => $researcher->name,
+					'description' => 'Investigaciones en las que colabora '.$researcher->name,
+					'keywords' => $keywords,
+					'image' => $image,
+					'image_width' => $width,
+					'image_height' => $height
+				);
+
+				$this->load->view('public/researcher', compact('researcher', 'researches', 'meta'));	
 			} else {
 				redirect('welcome/researcher');
 			}
@@ -191,7 +218,27 @@ class Welcome extends CI_Controller {
 
 			$research->degrees = $this->research_model->findDegrees($research->id);
 
-			$this->load->view('public/research', compact('research'));
+			$keywords = 'upaep, investigacion, licenciatura, universidad, popular, autónoma, puebla, ';
+			$keywords.= $research->title.', ';
+			$keywords.= $research->subject.', ';
+			$keywords.= $research->faculty->title;
+			foreach ($research->degrees as $d) {
+				$keywords.= ', '.$d->title;
+			}
+
+			$image = (file_exists('./uploads/researches/'.$research->id.'/image.jpg')) ? base_url('uploads/researches/'.$research->id.'/image.jpg') : base_url('uploads/image.png');
+			list($width, $height, $type, $attr) = getimagesize($image);
+
+			$meta = (object) array(
+				'title' => $research->title,
+				'description' => $research->abstract,
+				'keywords' => $keywords,
+				'image' => $image,
+				'image_width' => $width,
+				'image_height' => $height
+			);
+
+			$this->load->view('public/research', compact('research', 'meta'));
 		} else {
 			redirect('welcome');
 		}

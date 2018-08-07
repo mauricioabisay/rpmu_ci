@@ -10,6 +10,9 @@ class Participant extends CI_Controller
 		if(is_null($this->session->user)) {
 			redirect('admin/login', 'refresh');
 		}
+
+		$this->load->library('upload');
+
 		$this->load->model('degree_model');
 		$this->load->model('participant_model');
 		$this->load->model('user_model');
@@ -62,7 +65,7 @@ class Participant extends CI_Controller
 		if ( $this->input->post() ) {
 			$this->form_validation->set_rules('id', 'Matrícula', 'trim|required|integer|max_length[10]');
 			$this->form_validation->set_rules('name', 'Nombre', 'trim|required|max_length[255]');
-			$this->form_validation->set_rules('bio', 'Bio', 'trim|alpha_numeric_spaces');
+			$this->form_validation->set_rules('bio', 'Bio', 'trim');
 			$this->form_validation->set_rules('link', 'Link', 'trim|valid_url');
 			$this->form_validation->set_rules('degree_slug', 'Licenciatura', 'required');
 
@@ -93,6 +96,23 @@ class Participant extends CI_Controller
 				$data['degree_slug'] = $this->input->post('degree_slug');
 				
 				$this->participant_model->insert($data);
+
+				$path = './uploads/participants';
+				if ( !is_dir($path) ) {
+					mkdir($path, 0777);
+				}
+
+				$upload_config['overwrite'] = TRUE;
+				$upload_config['allowed_types'] = 'gif|jpg|jpeg|png|bmp';
+				$upload_config['upload_path'] = $path;
+				$upload_config['encrypt_name'] = FALSE;
+				$upload_config['file_name'] = $data['id'].'.jpg';
+				
+				$this->upload->initialize($upload_config);
+
+				if ( !$this->upload->do_upload('profile_photo') ) {
+
+				}
 				
 				redirect('/participant/', 'refresh');
 			} else {
@@ -112,7 +132,7 @@ class Participant extends CI_Controller
 		if ( $this->input->post() ) {
 			$this->form_validation->set_rules('id', 'Matrícula', 'trim|required|integer|max_length[10]');
 			$this->form_validation->set_rules('name', 'Nombre', 'trim|required|max_length[255]');
-			$this->form_validation->set_rules('bio', 'Bio', 'trim|alpha_numeric_spaces');
+			$this->form_validation->set_rules('bio', 'Bio', 'trim');
 			$this->form_validation->set_rules('link', 'Link', 'trim|valid_url');
 			$this->form_validation->set_rules('degree_slug', 'Licenciatura', 'required');
 
@@ -144,6 +164,23 @@ class Participant extends CI_Controller
 				
 				$this->participant_model->update($data, $this->input->post('legacy_id'));
 				
+				$path = './uploads/participants';
+				if ( !is_dir($path) ) {
+					mkdir($path, 0777);
+				}
+
+				$upload_config['overwrite'] = TRUE;
+				$upload_config['allowed_types'] = 'gif|jpg|jpeg|png|bmp';
+				$upload_config['upload_path'] = $path;
+				$upload_config['encrypt_name'] = FALSE;
+				$upload_config['file_name'] = $data['id'].'.jpg';
+				
+				$this->upload->initialize($upload_config);
+
+				if ( !$this->upload->do_upload('profile_photo') ) {
+
+				}
+
 				redirect('/participant/', 'refresh');
 			} else {
 				$degrees = $this->degree_model->get();

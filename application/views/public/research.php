@@ -23,7 +23,7 @@
 			<h2>Carreas:</h2>
 			<p class="list">
 			<?php foreach( $research->degrees as $degree ) : ?>
-				<span><a href="<?php echo site_url('welcome/degree'.$degree->slug);?>"><?php echo $degree->title ;?></a></span>
+				<span><a href="<?php echo site_url('welcome/degree/'.$degree->slug);?>"><?php echo $degree->title ;?></a></span>
 			<?php endforeach ?>
 			</p>
 		</div>
@@ -56,8 +56,8 @@
 		<div class="row">
 		
 			<div class="col-4 rpm-participant">
-				<div class="thumb"></div>
-				<h5><?php echo $research->leader->participant->name ;?></h5>
+				<a href="<?php echo site_url('welcome/researcher/'.$research->leader->participant->slug);?>"><div class="thumb" style="<?php echo ( file_exists('./uploads/participants/'.$research->leader->participant->id.'.jpg') ) ? 'background-image: url('.base_url('uploads/participants/'.$research->leader->participant->id.'.jpg)') : '';?>"></div></a>
+				<h5><a href="<?php echo site_url('welcome/researcher/'.$research->leader->participant->slug);?>"><?php echo $research->leader->participant->name ;?></a></h5>
 				<h6><?php echo $research->faculty->title ;?></h6>
 			</div>
 		</div>
@@ -73,8 +73,8 @@
 		<div class="row"> 
 		<?php foreach ( $research->researchers as $participant ) : ?>
 			<div class="col-4 rpm-participant">
-				<div class="thumb"></div>
-				<h5><?php echo $participant->name ;?></h5>
+				<a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><div class="thumb" style="<?php echo ( file_exists('./uploads/participants/'.$participant->id.'.jpg') ) ? 'background-image: url('.base_url('uploads/participants/'.$participant->id.'.jpg)') : '';?>"></div></a>
+				<h5><a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><?php echo $participant->name ;?></a></h5>
 				<h6><?php echo $participant->school->title ;?></h6>
 			</div>
 		<?php endforeach ?>
@@ -92,8 +92,8 @@
 		<div class="row"> 
 		<?php foreach ( $research->students as $participant ) : ?>
 			<div class="col-4 rpm-participant">
-				<div class="thumb"></div>
-				<h5><?php echo $participant->name ;?></h5>
+				<a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><div class="thumb" style="<?php echo ( file_exists('./uploads/participants/'.$participant->id.'.jpg') ) ? 'background-image: url('.base_url('uploads/participants/'.$participant->id.'.jpg)') : '';?>"></div></a>
+				<h5><a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><?php echo $participant->name ;?></a></h5>
 				<h6><?php echo $participant->school->title ;?></h6>
 			</div>
 		<?php endforeach ?>
@@ -119,6 +119,13 @@
 			</div>
 		<?php endforeach ?>
 		<?php endif ?>
+	</div>
+
+	<div class="rpm-share row">
+		<div class="col">
+			<div><a target="_blank" href="https://twitter.com/share?url=<?php echo current_url();?>&hashtags=<?php echo $meta->keywords;?>"><span class="tw">&nbsp;</span></a></div>
+			<div><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo current_url();?>"><span class="fb">&nbsp;</span></a></div>
+		</div>
 	</div>
 
 	<?php if ( count($research->citations) > 0 ) : ?>

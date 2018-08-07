@@ -1,6 +1,6 @@
 <?php $this->load->view('admin/layouts/main'); ?>
 
-	<form action="<?php echo site_url( 'participant/update') ;?>" method="post">
+	<form action="<?php echo site_url( 'participant/update') ;?>" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="legacy_id" value="<?php echo $participant->id;?>">
 		<fieldset>
 			<legend>Editar Participante</legend>
@@ -15,6 +15,13 @@
 				<input type="text" class="form-control" name="name" id="name"  value="<?php echo set_value('name', $participant->name);?>">
 			</div>
 			
+			<div class="form-group">
+			    <label for="profile_photo">Foto de perfil:</label>
+			    <input type="file" class="form-control-file single-file" id="profile_photo" name="profile_photo" aria-describedby="profile-photo-help">
+			    <div class="thumb" style="background-image:url('<?php echo base_url('uploads/participants/'.$participant->id.'.jpg') ;?>');"></div>
+			    <small id="profile-photo-help" class="form-text text-muted">Inserta una imagen de perfil, esta se mostrará cuando seas mencionado en la plataforma.</small>
+			</div>
+
 			<div class="form-group">
 				<label for="bio">Bio:</label>
 				<textarea name="bio" id="bio" cols="30" rows="10" class="form-control"><?php echo set_value('bio', $participant->bio);?></textarea>

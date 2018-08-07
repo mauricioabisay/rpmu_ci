@@ -44,7 +44,7 @@
         <div class="form-group">
             <label for="profile_photo">Foto de perfil:</label>
             <input type="file" class="form-control-file single-file" id="profile_photo" name="profile_photo" aria-describedby="profile-photo-help">
-            <div class="thumb" style="background-image:url('<?php //echo Storage::disk('local')->url('users/'.$user->email.'.jpg') ;?>');"></div>
+            <div class="thumb" style="background-image:url('<?php echo base_url('uploads/participants/'.$user->participant->id.'.jpg') ;?>');"></div>
             <small id="profile-photo-help" class="form-text text-muted">Inserta una imagen de perfil, esta se mostrará cuando seas mencionado en la plataforma.</small>
         </div>
 

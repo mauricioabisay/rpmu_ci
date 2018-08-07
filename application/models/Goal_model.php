@@ -28,8 +28,8 @@ class Goal_model extends CI_Model
 		}
 	}
 
-	public function findByResearch($id, $achieve = false) {
-		if ( $achieve ) {
+	public function findByResearch($id, $achieve = -1) {
+		if ( $achieve >= 0 ) {
 			$this->db->where('achieve', $achieve);
 		}
 
@@ -41,6 +41,17 @@ class Goal_model extends CI_Model
 		} else {
 			return array();
 		}
+	}
+
+	public function findByResearchCount($id, $achieve = -1) {
+		if ( $achieve >= 0 ) {
+			$this->db->where('achieve', $achieve);
+		}
+
+		$this->db->where('research_id', $id);
+		$query = $this->db->get($this->table);
+
+		return $query->num_rows();
 	}
 
 	public function update($data) {

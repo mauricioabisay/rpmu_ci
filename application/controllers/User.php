@@ -10,6 +10,9 @@ class User extends CI_Controller
 		if(is_null($this->session->user)) {
 			redirect('admin/login', 'refresh');
 		}
+
+		$this->load->library('upload');
+
 		$this->load->model('faculty_model');
 		$this->load->model('user_model');
 		$this->load->model('participant_model');
@@ -97,6 +100,23 @@ class User extends CI_Controller
 				$participant['link'] = $this->input->post('link');
 								
 				$this->participant_model->insert($participant);
+
+				$path = './uploads/participants';
+				if ( !is_dir($path) ) {
+					mkdir($path, 0777);
+				}
+
+				$upload_config['overwrite'] = TRUE;
+				$upload_config['allowed_types'] = 'gif|jpg|jpeg|png|bmp';
+				$upload_config['upload_path'] = $path;
+				$upload_config['encrypt_name'] = FALSE;
+				$upload_config['file_name'] = $participant['id'].'.jpg';
+				
+				$this->upload->initialize($upload_config);
+
+				if ( !$this->upload->do_upload('profile_photo') ) {
+
+				}
 				
 				redirect('/user/', 'refresh');
 			} else {
@@ -120,7 +140,7 @@ class User extends CI_Controller
 			$this->form_validation->set_rules('role', 'Rol', 'required');
 
 			$this->form_validation->set_rules('id', 'Matrícula', 'trim|required|integer|max_length[10]');
-			$this->form_validation->set_rules('bio', 'Bio', 'trim|alpha_numeric_spaces');
+			$this->form_validation->set_rules('bio', 'Bio', 'trim');
 			$this->form_validation->set_rules('link', 'Link', 'trim|valid_url');
 			$this->form_validation->set_rules('faculty_slug', 'Facultad', 'required');
 
@@ -158,6 +178,23 @@ class User extends CI_Controller
 								
 				$this->participant_model->update($participant, $this->input->post('participant_id'));
 				
+				$path = './uploads/participants';
+				if ( !is_dir($path) ) {
+					mkdir($path, 0777);
+				}
+
+				$upload_config['overwrite'] = TRUE;
+				$upload_config['allowed_types'] = 'gif|jpg|jpeg|png|bmp';
+				$upload_config['upload_path'] = $path;
+				$upload_config['encrypt_name'] = FALSE;
+				$upload_config['file_name'] = $participant['id'].'.jpg';
+				
+				$this->upload->initialize($upload_config);
+
+				if ( !$this->upload->do_upload('profile_photo') ) {
+
+				}
+
 				redirect('/user/', 'refresh');
 			} else {
 				$faculties = $this->faculty_model->get();
