@@ -73,7 +73,6 @@
 		.rpm-research h3 {
 			font-weight: 300;
 		}
-		
 		.rpm-research .degrees .list span a {
 			color: #b61b1b;
 		}

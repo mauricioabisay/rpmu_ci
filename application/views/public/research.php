@@ -43,65 +43,11 @@
 			</table>
 		</div>
 	</div>
-	
-	<div class="rpm-leader rpm-participants">
-		<div class="row">
-			<div class="col">
-				<h4>Director</h4>
-			</div>
-		</div>
-		<div class="row">
-		
-			<div class="col-4 rpm-participant">
-				<a href="<?php echo site_url('welcome/researcher/'.$research->leader->participant->slug);?>"><div class="thumb" style="<?php echo ( file_exists('./uploads/participants/'.$research->leader->participant->id.'.jpg') ) ? 'background-image: url('.base_url('uploads/participants/'.$research->leader->participant->id.'.jpg)') : '';?>"></div></a>
-				<h5><a href="<?php echo site_url('welcome/researcher/'.$research->leader->participant->slug);?>"><?php echo $research->leader->participant->name ;?></a></h5>
-				<h6><?php echo $research->faculty->title ;?></h6>
-			</div>
-		</div>
-	</div>
-	
-	<?php if ( count($research->researchers) > 0 ) : ?>
-	<div class="rpm-researchers rpm-participants">
-		<div class="row">
-			<div class="col">
-				<h4>Investigadores</h4>
-			</div>
-		</div>
-		<div class="row"> 
-		<?php foreach ( $research->researchers as $participant ) : ?>
-			<div class="col-4 rpm-participant">
-				<a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><div class="thumb" style="<?php echo ( file_exists('./uploads/participants/'.$participant->id.'.jpg') ) ? 'background-image: url('.base_url('uploads/participants/'.$participant->id.'.jpg)') : '';?>"></div></a>
-				<h5><a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><?php echo $participant->name ;?></a></h5>
-				<h6><?php echo $participant->school->title ;?></h6>
-			</div>
-		<?php endforeach ?>
-		</div>
-	</div>
-	<?php endif ?>
-	
-	<?php if ( count($research->students) > 0 ) : ?>
-	<div class="rpm-participants rpm-students">
-		<div class="row">
-			<div class="col">
-				<h4>Estudiantes</h4>
-			</div>
-		</div>
-		<div class="row"> 
-		<?php foreach ( $research->students as $participant ) : ?>
-			<div class="col-4 rpm-participant">
-				<a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><div class="thumb" style="<?php echo ( file_exists('./uploads/participants/'.$participant->id.'.jpg') ) ? 'background-image: url('.base_url('uploads/participants/'.$participant->id.'.jpg)') : '';?>"></div></a>
-				<h5><a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><?php echo $participant->name ;?></a></h5>
-				<h6><?php echo $participant->school->title ;?></h6>
-			</div>
-		<?php endforeach ?>
-		</div>
-	</div>
-	<?php endif ?>
 
 	<?php if( count($research->requirements) > 0 ) : ?>
 		<div class="row">
 			<div class="col">
-				<h2>Materiales y equipo</h2>
+				<h2>Materiales</h2>
 				<ul>
 					<?php foreach ($research->requirements as $r) : ?>
 						<li><?php echo $r->title;?>: <?php echo $r->description;?></li>
@@ -136,6 +82,42 @@
 		</div>
 	</div>
 	<?php endif ?>
+
+	<div class="row" style="margin-top: 1em;">
+		<div class="col">
+			<h2>Equipo</h2>
+		</div>
+	</div>
+	<div class="rpm-participants row">
+		<div class="col-4 rpm-participant">
+			<a href="<?php echo site_url('welcome/researcher/'.$research->leader->participant->slug);?>"><div class="thumb" style="<?php echo ( file_exists('./uploads/participants/'.$research->leader->participant->id.'.jpg') ) ? 'background-image: url('.base_url('uploads/participants/'.$research->leader->participant->id.'.jpg)') : '';?>"></div></a>
+			<h5><a href="<?php echo site_url('welcome/researcher/'.$research->leader->participant->slug);?>"><?php echo $research->leader->participant->name ;?></a></h5>
+			<h6><?php echo $research->faculty->title ;?></h6>
+			<h6>Director</h6>
+		</div>
+	
+	<?php if ( count($research->researchers) > 0 ) : ?>
+		<?php foreach ( $research->researchers as $participant ) : ?>
+			<div class="col-4 rpm-participant">
+				<a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><div class="thumb" style="<?php echo ( file_exists('./uploads/participants/'.$participant->id.'.jpg') ) ? 'background-image: url('.base_url('uploads/participants/'.$participant->id.'.jpg)') : '';?>"></div></a>
+				<h5><a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><?php echo $participant->name ;?></a></h5>
+				<h6><?php echo $participant->school->title ;?></h6>
+				<h6>Investigador</h6>
+			</div>
+		<?php endforeach ?>
+	<?php endif ?>
+	
+	<?php if ( count($research->students) > 0 ) : ?>
+		<?php foreach ( $research->students as $participant ) : ?>
+			<div class="col-4 rpm-participant">
+				<a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><div class="thumb" style="<?php echo ( file_exists('./uploads/participants/'.$participant->id.'.jpg') ) ? 'background-image: url('.base_url('uploads/participants/'.$participant->id.'.jpg)') : '';?>"></div></a>
+				<h5><a href="<?php echo site_url('welcome/researcher/'.$participant->slug);?>"><?php echo $participant->name ;?></a></h5>
+				<h6><?php echo $participant->school->title ;?></h6>
+				<h6>Estudiante</h6>
+			</div>
+		<?php endforeach ?>
+	<?php endif ?>
+	</div>
 	
 	<div class="rpm-research-carousel">
 		<?php $items = directory_map('./uploads/researches/'.$research->id.'/gallery/', 1);?>
