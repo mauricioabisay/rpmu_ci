@@ -57,11 +57,17 @@
 		list.children().unbind();
 		list.html('');
 		
+		var currentData = '';
+		jQuery("input[name='" + input.attr('rpm-api-input') + "[]']").each(function(index, value) {
+			currentData += value.value + ',';
+		});
+
 		jQuery.ajax({
 			type: "GET",
 			url: jQuery(this).attr('rpm-api'),
 			data: {
-				'string': jQuery(this).val()
+				'string': jQuery(this).val(),
+				'current': currentData
 			},
 			success: function(data) {
 				list.css('display', 'block');

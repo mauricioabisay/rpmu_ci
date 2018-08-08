@@ -11,39 +11,36 @@
 	</div>
 <div class="container">
 	
-	<div class="row faculty">
+	<div class="row">
 		<div class="col">
-			<h2>Facultad:</h2>
-			<h3><?php echo $research->faculty->title;?></h3>
-		</div>
-	</div>
-
-	<div class="row degrees">
-		<div class="col">
-			<h2>Carreas:</h2>
-			<p class="list">
-			<?php foreach( $research->degrees as $degree ) : ?>
-				<span><a href="<?php echo site_url('welcome/degree/'.$degree->slug);?>"><?php echo $degree->title ;?></a></span>
-			<?php endforeach ?>
-			</p>
-		</div>
-	</div>
-
-	<div class="row subjects">
-		<div class="col">
-			<h2>Temas:</h2>
-			<h3>
-				<?php foreach ( $research->subjects as $s ) : ?>
-					<span><?php echo $s->title ;?></span>
-				<?php endforeach ?>
-			</h3>
-		</div>
-	</div>
-
-	<div class="row abstract">
-		<div class="col">
-			<h2>Síntesis:</h2>
-			<p><?php echo $research->abstract ;?></p>
+			<table class="table">
+				<tbody>
+					<tr>
+						<td><h2>Facultad</h2></td>
+						<td><h3><?php echo $research->faculty->title;?></h3></td>
+					</tr>
+					<tr class="degrees">
+						<td><h2>Carreras</h2></td>
+						<td class="list">
+							<?php foreach ($research->degrees as $degree) : ?>
+								<span><a href="<?php echo site_url('welcome/degree/'.$degree->slug);?>"><?php echo $degree->title ;?></a></span>
+							<?php endforeach ?>		
+						</td>
+					</tr>
+					<tr>
+						<td><h2>Temas</h2></td>
+						<td class="list">
+							<?php foreach ( $research->subjects as $s ) : ?>
+								<span><?php echo $s->title ;?></span>
+							<?php endforeach ?>
+						</td>
+					</tr>
+					<tr>
+						<td><h2>Síntesis</h2></td>
+						<td><p><?php echo $research->abstract;?></p></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 	
@@ -100,12 +97,42 @@
 		</div>
 	</div>
 	<?php endif ?>
+
+	<?php if( count($research->requirements) > 0 ) : ?>
+		<div class="row">
+			<div class="col">
+				<h2>Materiales y equipo</h2>
+				<ul>
+					<?php foreach ($research->requirements as $r) : ?>
+						<li><?php echo $r->title;?>: <?php echo $r->description;?></li>
+					<?php endforeach ?>
+				</ul>
+			</div>
+		</div>
+	<?php endif ?>
+
+	<?php if( count($research->goals) > 0 ) : ?>
+		<div class="row">
+			<div class="col">
+				<h2>Objetivos</h2>
+				<ul>
+					<?php foreach ($research->goals as $g) : ?>
+						<li><?php echo $g->title;?>: <?php echo $g->description;?></li>
+					<?php endforeach ?>
+				</ul>
+			</div>
+		</div>
+	<?php endif ?>
 	
 	<?php if ( $research->description ) : ?>
 	<div class="row">
 		<div class="col">
 			<h2>Contenido</h2>
-			<p><?php echo $research->description ;?></p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<pre><?php echo $research->description;?></pre>
 		</div>
 	</div>
 	<?php endif ?>
@@ -145,17 +172,16 @@
 	<div class="row">
 		<div class="col">
 			<h2>Comentarios</h2>
-			<p><?php echo $research->extra_info ;?></p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<pre><?php echo $research->extra_info;?></pre>
 		</div>
 	</div>
 	<?php endif ?>
 </div>
 </div>
 <script src="https://unpkg.com/jarallax@1.10/dist/jarallax.min.js"></script>
-<script type="text/javascript">
-	window.onload = function() {
-		jQuery('.rpm-research-carousel').slick({dots: true});
-	};
-</script>
 
 <?php $this->load->view('public/layouts/footer');?>

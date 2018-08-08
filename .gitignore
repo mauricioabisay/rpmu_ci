@@ -12,6 +12,8 @@ application/ci_sessions/
 
 application/config/config.php
 
+uploads/**/*
+
 composer.lock
 
 /user_guide_src/

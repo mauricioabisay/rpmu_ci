@@ -69,7 +69,8 @@
 			width: 15vh;
 			height: 15vh;
 			border-radius: 100%;
-			background-color: blue;
+			background-color: lightgray;
+			background-image: url(<?php echo base_url('uploads/logo.svg');?>);
 			background-size: cover !important;
 			background-repeat: no-repeat !important;
 			background-position: center !important;

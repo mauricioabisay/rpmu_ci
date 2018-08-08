@@ -66,6 +66,8 @@ class Research extends CI_Controller
 			$this->form_validation->set_rules('title', 'Título', 'trim|required|max_length[255]');
 			$this->form_validation->set_rules('subject[]', 'Tema', 'trim');
 			$this->form_validation->set_rules('abstract', 'Síntesis', 'trim|required');
+			$this->form_validation->set_rules('description', 'Descripción detallada', 'trim');
+			$this->form_validation->set_rules('extra_info', 'Notas al pie', 'trim');
 
 			$this->form_validation->set_rules('requirement_delete[]', 'Req.Borrar', 'trim');
 			$this->form_validation->set_rules('requirement_id[]', 'Req.Id', 'trim');
@@ -110,8 +112,8 @@ class Research extends CI_Controller
 				$research['title'] = $this->input->post('title');
 				$research['abstract'] = $this->input->post('abstract');
 				$research['subject'] = implode(',', $this->input->post('subject'));
-				$research['description'] = '';
-				$research['extra_info'] = '';
+				$research['description'] = $this->input->post('description');
+				$research['extra_info'] = $this->input->post('extra_info');
 				
 				$research_id = $this->research_model->insert($research);
 
@@ -317,6 +319,8 @@ class Research extends CI_Controller
 			$this->form_validation->set_rules('title', 'Título', 'trim|required|max_length[255]');
 			$this->form_validation->set_rules('subject[]', 'Tema', 'trim');
 			$this->form_validation->set_rules('abstract', 'Síntesis', 'trim|required');
+			$this->form_validation->set_rules('description', 'Descripción detallada', 'trim');
+			$this->form_validation->set_rules('extra_info', 'Notas al pie', 'trim');
 
 			$this->form_validation->set_rules('requirement_delete[]', 'Req.Borrar', 'trim');
 			$this->form_validation->set_rules('requirement_id[]', 'Req.Id', 'trim');
@@ -365,8 +369,8 @@ class Research extends CI_Controller
 				$research['title'] = $this->input->post('title');
 				$research['abstract'] = $this->input->post('abstract');
 				$research['subject'] = implode(',', $this->input->post('subject'));
-				$research['description'] = '';
-				$research['extra_info'] = '';
+				$research['description'] = $this->input->post('description');
+				$research['extra_info'] = $this->input->post('extra_info');
 				
 				$this->research_model->update($research);
 

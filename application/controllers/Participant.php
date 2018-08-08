@@ -63,7 +63,7 @@ class Participant extends CI_Controller
 
 	public function store() {
 		if ( $this->input->post() ) {
-			$this->form_validation->set_rules('id', 'Matrícula', 'trim|required|integer|max_length[10]');
+			$this->form_validation->set_rules('id', 'Matrícula', 'trim|required|integer|max_length[10]|is_unique[participants.id]');
 			$this->form_validation->set_rules('name', 'Nombre', 'trim|required|max_length[255]');
 			$this->form_validation->set_rules('bio', 'Bio', 'trim');
 			$this->form_validation->set_rules('link', 'Link', 'trim|valid_url');
@@ -130,7 +130,15 @@ class Participant extends CI_Controller
 
 	public function update() {
 		if ( $this->input->post() ) {
-			$this->form_validation->set_rules('id', 'Matrícula', 'trim|required|integer|max_length[10]');
+			
+			if ( $this->input->post('legacy_id') === $this->input->post('id') ) {
+				//Trying to update other data but not the participant's id
+				$this->form_validation->set_rules('id', 'Matrícula', 'trim|required|integer|max_length[10]');
+			} else {
+				//Trying to update the participant's id
+				$this->form_validation->set_rules('id', 'Matrícula', 'trim|required|integer|max_length[10]|is_unique[participants.id]');
+			}
+
 			$this->form_validation->set_rules('name', 'Nombre', 'trim|required|max_length[255]');
 			$this->form_validation->set_rules('bio', 'Bio', 'trim');
 			$this->form_validation->set_rules('link', 'Link', 'trim|valid_url');

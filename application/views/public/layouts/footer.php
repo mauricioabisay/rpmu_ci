@@ -9,16 +9,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.js"></script>
 
 <script type="text/javascript">
-	jQuery('.rpm-menu-close').click(function() {
-		var parent = jQuery(this).parent();
-		parent.css('display', 'none');
+	jQuery(document).ready(function() {
+		jQuery('.rpm-menu-close').click(function() {
+			var parent = jQuery(this).parent();
+			parent.css('display', 'none');
+		});
+		jQuery('.rpm-menu-open').click(function() {
+			console.log('hola');
+			var menu = jQuery(this).parents('.rpm-menu').find('.rpm-menu-toggle');
+			menu.css('display', 'block');
+		});
 	});
-	jQuery('.rpm-menu-open').click(function() {
-		console.log('hola');
-		var menu = jQuery(this).parents('.rpm-menu').find('.rpm-menu-toggle');
-		menu.css('display', 'block');
-	});
-	jQuery('.rpm-researches-list').masonry({itemSelector: '.rpm-research-item'});
+	window.onload = function() {
+		jQuery('.rpm-researches-list').masonry({itemSelector: '.rpm-research-item'});
+		jQuery('.rpm-research-carousel').slick({dots: true});
+	};
 </script>
 </body>
 </html>

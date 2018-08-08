@@ -32,7 +32,19 @@
 
 		<meta name="twitter:card" content="summary">
 	<?php endif ?>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
 	<style type="text/css">
+		body * {
+			font-family: 'Roboto', sans-serif;
+			font-weight: 300;
+		}
+		body pre {
+			font-size: 1.1rem;
+			margin: 0.5em 0;
+		}
+		h1, h2, h3, h4, h5, h6 {
+			font-weight: 400;
+		}
 		.rpm-research .header {
 			margin: 2em 0;
 		}
@@ -55,6 +67,13 @@
 		.rpm-research .header h1 {
 			text-align: center;
 		}
+		.rpm-research h2 {
+			font-size: 1.5rem;
+		}
+		.rpm-research h3 {
+			font-weight: 300;
+		}
+		
 		.rpm-research .degrees .list span a {
 			color: #b61b1b;
 		}
@@ -96,7 +115,7 @@
 			background-color: #b61b1b;
 			border-radius: 100%;
 		}
-		
+		/**Menu**/		
 		.rpm-menu {
 			position: fixed;
 			top: 0;
@@ -136,6 +155,9 @@
 			padding-right: 2em;
 			z-index: 110;
 		}
+		.rpm-menu-toggle h5 {
+			font-weight: 300;
+		}
 		/*a,*/
 		.rpm-menu a,
 		.rpm-faculty a {
@@ -165,7 +187,7 @@
 			
 		}
 		.rpm-menu-open h5 {
-			font-weight: bolder;
+			font-weight: 400;
 			padding-bottom: 0.5em;
 			padding-left: 0.5em;
 			border-bottom: 2px solid #b61b1b;
@@ -205,7 +227,7 @@
 		/***/
 		.rpm-researches-list .rpm-research-item h3 {
 			font-size: 1.2em;
-			font-weight: bolder;
+			font-weight: 400;
 		}
 		.rpm-researches-list .rpm-research-item h4 {
 			font-size: 1em;

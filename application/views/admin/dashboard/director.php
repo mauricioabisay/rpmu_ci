@@ -7,7 +7,7 @@
 </div>
 
 <div class="row">
-	<div class="col-sm-12 col-md-6 rpm-graph">
+	<div class="col-sm-12 col-md-12 col-lg-6 rpm-graph">
 		<div class="card">
 			<div class="card-body">
 				<h5 class="card-title">Avance de Investigaciones</h5>
@@ -15,7 +15,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-sm-12 col-md-6 rpm-graph">
+	<div class="col-sm-12 col-md-12 col-lg-6 rpm-graph">
 		<div class="card">
 			<div class="card-body">
 				<h5 class="card-title">Rendimiento de Investigadores</h5>

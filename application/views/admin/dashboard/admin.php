@@ -54,42 +54,6 @@
 		}
 	);
 	new Chart(
-		document.getElementById('rpm-researches-by-faculty').getContext('2d'),
-		{
-			type: 'horizontalBar',
-			data: {
-				labels: <?php echo $researches_by_faculty['labels'];?>,
-				datasets: [
-					{
-						label: 'Creadas',
-						data: <?php echo $researches_by_faculty['created'];?>,
-						backgroundColor: '#aaa'
-					},
-					{
-						label: 'En desarrollo',
-						data: <?php echo $researches_by_faculty['started'];?>,
-						backgroundColor: '#ffa'
-					},
-					{
-						label: 'Terminadas',
-						data: <?php echo $researches_by_faculty['completed'];?>,
-						backgroundColor: '#afa'
-					}
-				]
-			},
-			options: {
-				legend: {
-					position: 'right'
-				},
-				scales: {
-					xAxes: [{stacked: true}],
-					yAxes: [{stacked: true}]
-				},
-				responsive: true,
-			}
-		}
-	);
-	new Chart(
 		document.getElementById('rpm-researchers-performance').getContext('2d'),
 		{
 			type: 'pie',
@@ -105,6 +69,42 @@
 				legend: {
 					position: 'right'
 				}
+			}
+		}
+	);
+	new Chart(
+		document.getElementById('rpm-researches-by-faculty').getContext('2d'),
+		{
+			type: 'horizontalBar',
+			data: {
+				labels: <?php echo $researches_by_faculty['labels'];?>,
+				datasets: [
+					{
+						label: 'Terminadas',
+						data: <?php echo $researches_by_faculty['completed'];?>,
+						backgroundColor: '#afa'
+					},
+					{
+						label: 'En desarrollo',
+						data: <?php echo $researches_by_faculty['started'];?>,
+						backgroundColor: '#ffa'
+					},
+					{
+						label: 'Creadas',
+						data: <?php echo $researches_by_faculty['created'];?>,
+						backgroundColor: '#aaa'
+					}
+				]
+			},
+			options: {
+				legend: {
+					position: 'right'
+				},
+				scales: {
+					xAxes: [{stacked: true}],
+					yAxes: [{stacked: true}]
+				},
+				responsive: true,
 			}
 		}
 	);

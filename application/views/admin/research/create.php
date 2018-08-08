@@ -15,6 +15,9 @@
 			<a href="#participants" class="nav-link" id="participants-tab" data-toggle="tab">Participantes</a>
 		</li>
 		<li class="nav-item">
+			<a href="#development" class="nav-link" id="development-tab" data-toggle="tab">Desarrollo</a>
+		</li>
+		<li class="nav-item">
 			<a href="#gallery" class="nav-link" id="gallery-tab" data-toggle="tab">Galería</a>
 		</li>
 		<li class="nav-item">
@@ -193,6 +196,23 @@
 				</div>
 				
 				<div id="participants-cloud" class="form-group rpm-api-cloud"></div>
+			</fieldset>
+		</div>
+		
+		<div class="tab-pane fade" id="development" role="tabpanel">
+			<fieldset>
+				<legend>Desarrollo</legend>
+
+				<div class="form-group">
+					<label for="description">Descripción detallada:</label>
+					<textarea name="description" id="description" cols="30" rows="20" class="form-control" placeholder="Descripción detallada del proyecto"><?php echo set_value('description');?></textarea>
+				</div>
+
+				<div class="form-group">
+					<label for="extra_info">Notas al pie:</label>
+					<textarea name="extra_info" id="extra_info" cols="30" rows="3" class="form-control" placeholder="Comentarios adicionales"><?php echo set_value('extra_info');?></textarea>
+				</div>
+
 			</fieldset>
 		</div>
 

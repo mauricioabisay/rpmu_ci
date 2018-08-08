@@ -63,7 +63,7 @@ class User extends CI_Controller
 			$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
 			$this->form_validation->set_rules('role', 'Rol', 'required');
 
-			$this->form_validation->set_rules('id', 'Matrícula', 'trim|required|integer|max_length[10]');
+			$this->form_validation->set_rules('id', 'Matrícula', 'trim|required|integer|max_length[10]|is_unique[participants.id]');
 			$this->form_validation->set_rules('bio', 'Bio', 'trim');
 			$this->form_validation->set_rules('link', 'Link', 'trim|valid_url');
 			$this->form_validation->set_rules('faculty_slug', 'Facultad', 'required');
@@ -139,7 +139,12 @@ class User extends CI_Controller
 			$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
 			$this->form_validation->set_rules('role', 'Rol', 'required');
 
-			$this->form_validation->set_rules('id', 'Matrícula', 'trim|required|integer|max_length[10]');
+			if ( $this->input->post('participant_id') === $this->input->post('id') ) {
+				$this->form_validation->set_rules('id', 'Matrícula', 'trim|required|integer|max_length[10]');
+			} else {
+				$this->form_validation->set_rules('id', 'Matrícula', 'trim|required|integer|max_length[10]|is_unique[participants.id]');
+			}
+			
 			$this->form_validation->set_rules('bio', 'Bio', 'trim');
 			$this->form_validation->set_rules('link', 'Link', 'trim|valid_url');
 			$this->form_validation->set_rules('faculty_slug', 'Facultad', 'required');
