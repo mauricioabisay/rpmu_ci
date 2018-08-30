@@ -5,6 +5,18 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
+	function slugify(string) {
+		const a = 'àáäâãåèéëêìíïîòóöôùúüûñçßÿœæŕśńṕẃǵǹḿǘẍźḧ·/_,:;';
+		const b = 'aaaaaaeeeeiiiioooouuuuncsyoarsnpwgnmuxzh------';
+		const p = new RegExp(a.split('').join('|'), 'g');
+		return string.toString().toLowerCase()
+		.replace(/\s+/g, '-') // Replace spaces with
+	    .replace(p, c => b.charAt(a.indexOf(c))) // Replace special characters
+	    .replace(/&/g, '-and-') // Replace & with ‘and’
+	    .replace(/[^\w\-]+/g, '') // Remove all non-word characters
+	    .replace(/\-\-+/g, '-') // Replace multiple — with single -
+	    .replace(/^-+/, '') // Trim — from start of text .replace(/-+$/, '') // Trim — from end of text
+	}
 
 	jQuery('.rpm-api-search-slug').on('input', function () {
 		
@@ -46,8 +58,11 @@
 		jQuery( '#' + me.attr('rpm-input') ).remove();
 	};
 
+	var removeNewCloudElement = function () {
+		jQuery(this).remove();
+	};
+
 	jQuery('.rpm-api-search-slug-cloud').on('input', function () {
-		
 		var input = jQuery(this);
 		var list = jQuery( '#' + input.attr('rpm-api-list') );
 		var resultId = input.attr('rpm-api-result-id');
@@ -57,6 +72,7 @@
 		list.children().unbind();
 		list.html('');
 		
+		var currentValue = jQuery(this).val();
 		var currentData = '';
 		jQuery("input[name='" + input.attr('rpm-api-input') + "[]']").each(function(index, value) {
 			currentData += value.value + ',';
@@ -66,24 +82,69 @@
 			type: "GET",
 			url: jQuery(this).attr('rpm-api'),
 			data: {
-				'string': jQuery(this).val(),
+				'string': currentValue,
 				'current': currentData
 			},
 			success: function(data) {
 				list.css('display', 'block');
-				data.forEach(function (e) {
-					var aux = jQuery('<li>'+e[resultHuman]+'</li>');
-					list.append(aux);
-					aux.bind('click', function() {
-						list.css('display', 'none');
-						input.val('');
-						var cloudItem = jQuery('<button class="btn btn-primary rpm-badge" type="button" rpm-input="' + e[resultId] + '" rpm-delete="' + input.attr('rpm-api-input') + '_delete[]"><span>' + e[resultHuman] + '</span></button>');
-						var cloudInput = jQuery('<input type="hidden" name="' + input.attr('rpm-api-input') +'[]" id="' + e[resultId] + '" value="' + e[resultId] + '">');
-						cloud.append(cloudItem);
-						cloud.append(cloudInput);
-						cloudItem.bind('click', removeCloudElement);
+				if ( data .length <= 0 ) {
+					if ( input.attr('rpm-api-create') === undefined || input.attr('rpm-api-create') === false ) {
+						var aux = jQuery('<li>No se han encontrado coincidencias, click para finalizar búsqueda.</li>');
+						list.append(aux);
+						aux.bind('click', function() {
+							list.css('display', 'none');
+							input.val('');
+						}); 
+					} else {
+						var currentValueAsSlug = slugify(currentValue);
+						var flagSlug = false;
+						jQuery("input[name='" + input.attr('rpm-api-input') + "[]']").each(function(index, value) {
+							if ( !flagSlug && value.value === currentValueAsSlug ) {
+								flagSlug = true;
+							}
+						});
+						if ( flagSlug ) {
+							var aux = jQuery('<li>Registro pre-existente, click para finalizar búsqueda.</li>');
+							list.append(aux);
+							aux.bind('click', function() {
+								list.css('display', 'none');
+								input.val('');
+							});
+						} else {
+							var aux = jQuery('<li>Click para agregar nuevo registro, <b>' + input.val() + '</b></li>');
+							list.append(aux);
+							if ( input.attr('rpm-api-create-function') === undefined ) {
+								aux.bind('click', function() {
+									list.css('display', 'none');
+									var cloudItem = jQuery('<button class="btn btn-primary rpm-badge" type="button"><span>' + input.val() + '</span>' + '<input type="hidden" name="' + input.attr('rpm-api-create-input') +'[]" value="' + input.val() + '">' + '</button>');
+									cloud.append(cloudItem);
+									cloudItem.bind('click', removeNewCloudElement);
+									input.val('');
+								});
+							} else {
+								aux.bind( 'click', createFunctions[input.attr('rpm-api-create-function')] );
+							}
+						}
+						
+					}
+				} else {
+					data.forEach(function (e) {
+						var aux = jQuery('<li>'+e[resultHuman]+'</li>');
+						list.append(aux);
+						aux.bind('click', function() {
+							list.css('display', 'none');
+							input.val('');
+							var cloudItem = jQuery('<button class="btn btn-primary rpm-badge" type="button" rpm-input="' + e[resultId] + '" rpm-delete="' + input.attr('rpm-api-input') + '_delete[]"><span>' + e[resultHuman] + '</span></button>');
+							var cloudInput = jQuery('<input type="hidden" name="' + input.attr('rpm-api-input') +'[]" id="' + e[resultId] + '" value="' + e[resultId] + '">');
+							cloud.append(cloudItem);
+							cloud.append(cloudInput);
+							cloudItem.bind('click', removeCloudElement);
+						});
 					});
-				});
+				}
+			},
+			error: function(error) {
+				console.error(error);
 			},
 			dataType: 'json'
 		});
@@ -189,7 +250,6 @@
 	};
 
 	jQuery('select[name="citation_type[]"]').change(linkOrFile);
-
 </script>
 <script type="text/javascript">
 	var googleUser = {};

@@ -33,10 +33,13 @@ class Api extends CI_Controller {
 		if ( $query->num_rows() > 0 ) {
 			print_r(json_encode($query->result()));
 		} else {
-			$this->db->where("id = ".$this->input->get('string').' '.$current);
-			$this->db->where_not_in('id', explode(',', $this->input->get('current')));
+			$this->db->where("id = '".$this->input->get('string')."' ".$current);
 			$query = $this->db->get('participants');
-			print_r(json_encode($query->result()));
+			if ( $query->num_rows() > 0 ) {
+				print_r(json_encode($query->result()));
+			} else {
+				print_r(json_encode(array()));
+			}
 		}
 		exit();
 	}

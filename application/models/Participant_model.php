@@ -29,6 +29,7 @@ class Participant_model extends CI_Model
 
 	public function insert($data) {
 		$this->db->insert( $this->table, $data );
+		return $this->db->insert_id();
 	}
 
 	public function find($id) {
@@ -63,5 +64,17 @@ class Participant_model extends CI_Model
 		$this->db->delete( $this->table, array('id' => $id) );
 	}
 
+	public function getResearchers( $start = -1, $items_per_page ) {
+		if ( $start >= 0 && $items_per_page ) {
+			$this->db->limit( $items_per_page, $start );
+		}
 
+		$query = $this->db->get( $this->table );
+
+		return $query->result();
+	}
+
+	public function getResearchersCount() {
+		return $query->num_rows();
+	}
 }

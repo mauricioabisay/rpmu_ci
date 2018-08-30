@@ -18,6 +18,7 @@ class Research extends CI_Controller
 		$this->load->model('goal_model');
 		$this->load->model('citation_model');
 		$this->load->model('user_model');
+		$this->load->model('participant_model');
 	}
 
 	public function index() {
@@ -58,7 +59,18 @@ class Research extends CI_Controller
 	}
 
 	public function create() {
-		$this->load->view('admin/research/create');
+		$this->load->model('degree_model');
+		$this->load->model('faculty_model');
+		
+		if ( $this->session->user->role === 'admin' ) {
+			$degrees = $this->degree_model->get();
+		} else {
+			$degrees = $this->degree_model->findByFaculty($this->session->user->faculty_slug);
+		}
+		
+		$faculties = $this->faculty_model->get();
+
+		$this->load->view('admin/research/create', compact('degrees', 'faculties'));
 	}
 
 	public function store() {
@@ -80,7 +92,15 @@ class Research extends CI_Controller
 			$this->form_validation->set_rules('goal_description[]', 'Meta Desc.', 'trim');			
 			
 			$this->form_validation->set_rules('researchers[]', 'Investigadores', 'trim');
+			$this->form_validation->set_rules('new_researcher_id[]', 'Nuevo investigador ID', 'trim');
+			$this->form_validation->set_rules('new_researcher_name[]', 'Nuevo investigador nombre', 'trim');
+			$this->form_validation->set_rules('new_researcher_email[]', 'Nuevo investigador email', 'trim');
+			$this->form_validation->set_rules('new_researcher_faculty[]', 'Nuevo investigador facultad', 'trim');
+
 			$this->form_validation->set_rules('participants[]', 'Estudiantes', 'trim');
+			$this->form_validation->set_rules('new_participant_id[]', 'Nuevo estudiante ID', 'trim');
+			$this->form_validation->set_rules('new_participant_name[]', 'Nuevo estudiante nombre', 'trim');
+			$this->form_validation->set_rules('new_participant_degree[]', 'Nuevo estudiante carrera', 'trim');
 
 			$this->form_validation->set_rules('citation_delete[]', 'Pub.Borrar', 'trim');
 			$this->form_validation->set_rules('citation_id[]', 'Pub.Id', 'trim');
@@ -111,7 +131,13 @@ class Research extends CI_Controller
 				$research['slug'] = strtolower( strtr( $this->input->post('title'), $unwanted_array ) );
 				$research['title'] = $this->input->post('title');
 				$research['abstract'] = $this->input->post('abstract');
-				$research['subject'] = implode(',', $this->input->post('subject'));
+
+				if ( count($this->input->post('subject[]')) > 0 ) {
+					$research['subject'] = implode(',', $this->input->post('subject'));
+				} else {
+					$research['subject'] = '';
+				}
+				
 				$research['description'] = $this->input->post('description');
 				$research['extra_info'] = $this->input->post('extra_info');
 				
@@ -119,18 +145,58 @@ class Research extends CI_Controller
 
 				//Leader
 				$this->research_model->insertParticipant($research_id, $this->session->user->participant->id, 'leader');
+				
 				//Researchers
 				$len = count($this->input->post('researchers[]'));
 				$ids = $this->input->post('researchers[]');
 				for( $i= 0; $i < $len; $i++ ) {
 					$this->research_model->insertParticipant($research_id, $ids[$i], 'researcher');
 				}
+				//Creating new researchers
+				$len = count($this->input->post('new_researcher_id[]'));
+				$ids = $this->input->post('new_researcher_id[]');
+				$names = $this->input->post('new_researcher_name[]');
+				$emails = $this->input->post('new_researcher_email[]');
+				$faculties = $this->input->post('new_researcher_faculty[]');
+				for ( $i = 0; $i < $len; $i++ ) {
+					$user['email'] = $emails[$i];
+					$user['role'] = 'professor';
+					$user['faculty_slug'] = $faculties[$i];
+
+					$participant['user_id'] = $this->user_model->insert($user);
+					$participant['id'] = $ids[$i];
+					$participant['name'] = $names[$i];
+					$participant['slug'] = strtolower( strtr($names[$i], $unwanted_array ) );
+					$this->participant_model->insert($participant);
+				}
+				//Adding new researchers to current research
+				for ( $i = 0; $i < $len; $i++ ) {
+					$this->research_model->insertParticipant($research_id, $ids[$i], 'researcher');
+				}
+
 				//Students
 				$len = count($this->input->post('participants[]'));
 				$ids = $this->input->post('participants[]');
 				for( $i= 0; $i < $len; $i++ ) {
 					$this->research_model->insertParticipant($research_id, $ids[$i], 'student');
 				}
+				//Creating new students
+				$len = count($this->input->post('new_participant_id[]'));
+				$ids = $this->input->post('new_participant_id[]');
+				$names = $this->input->post('new_participant_name[]');
+				$degrees = $this->input->post('new_participant_degree[]');
+				for ( $i = 0; $i < $len; $i++ ) {
+					$participant['id'] = $ids[$i];
+					$participant['name'] = $names[$i];
+					$participant['slug'] = strtolower( strtr($names[$i], $unwanted_array ) );
+					$participant['degree_slug'] = $degrees[$i];
+					$this->participant_model->insert($participant);
+				}
+				//Adding new students to current research
+				for ( $i = 0; $i < $len; $i++ ) {
+					$this->research_model->insertParticipant($research_id, $ids[$i], 'student');
+				}
+
 				//Create research directory structure
 				$research_path = './uploads/researches/'.$research_id;
 				$gallery_path = $research_path.'/gallery';
@@ -297,9 +363,20 @@ class Research extends CI_Controller
 	}
 
 	public function edit($id) {
+		$this->load->model('degree_model');
+		$this->load->model('faculty_model');
+		
+		if ( $this->session->user->role === 'admin' ) {
+			$degrees = $this->degree_model->get();
+		} else {
+			$degrees = $this->degree_model->findByFaculty($this->session->user->faculty_slug);
+		}
+		
+		$faculties = $this->faculty_model->get();
+
 		$research = $this->research_model->find($id);
 		
-		$research->subjects = $this->research_model->findSubjects($research->subject);
+		$research->subjects = ( strlen($research->subject) > 0 ) ? $this->research_model->findSubjects($research->subject) : array();
 
 		$research->requirements = $this->requirement_model->findByResearch($id);
 
@@ -310,7 +387,7 @@ class Research extends CI_Controller
 		$research->researchers = $this->research_model->findParticipants($id, 'researcher');
 		$research->students = $this->research_model->findParticipants($id, 'student');
 
-		$this->load->view('admin/research/edit', compact('research'));
+		$this->load->view('admin/research/edit', compact('research', 'degrees', 'faculties'));
 	}
 
 	public function update() {
@@ -334,7 +411,15 @@ class Research extends CI_Controller
 			$this->form_validation->set_rules('goal_achieve[]', 'Meta Status', 'trim|numeric');		
 			
 			$this->form_validation->set_rules('researchers[]', 'Investigadores', 'trim');
+			$this->form_validation->set_rules('new_researcher_id[]', 'Nuevo investigador ID', 'trim');
+			$this->form_validation->set_rules('new_researcher_name[]', 'Nuevo investigador nombre', 'trim');
+			$this->form_validation->set_rules('new_researcher_email[]', 'Nuevo investigador email', 'trim');
+			$this->form_validation->set_rules('new_researcher_faculty[]', 'Nuevo investigador facultad', 'trim');
+
 			$this->form_validation->set_rules('participants[]', 'Estudiantes', 'trim');
+			$this->form_validation->set_rules('new_participant_id[]', 'Nuevo estudiante ID', 'trim');
+			$this->form_validation->set_rules('new_participant_name[]', 'Nuevo estudiante nombre', 'trim');
+			$this->form_validation->set_rules('new_participant_degree[]', 'Nuevo estudiante carrera', 'trim');
 
 			$this->form_validation->set_rules('citation_delete[]', 'Pub.Borrar', 'trim');
 			$this->form_validation->set_rules('citation_id[]', 'Pub.Id', 'trim');
@@ -368,25 +453,71 @@ class Research extends CI_Controller
 				$research['slug'] = strtolower( strtr( $this->input->post('title'), $unwanted_array ) );
 				$research['title'] = $this->input->post('title');
 				$research['abstract'] = $this->input->post('abstract');
-				$research['subject'] = implode(',', $this->input->post('subject'));
+
+				if ( count($this->input->post('subject[]')) > 0 ) {
+					$research['subject'] = implode(',', $this->input->post('subject'));
+				} else {
+					$research['subject'] = '';
+				}
+				
 				$research['description'] = $this->input->post('description');
 				$research['extra_info'] = $this->input->post('extra_info');
 				
 				$this->research_model->update($research);
 
 				$this->research_model->clearParticipants($research_id);
+				
 				//Researchers
 				$len = count($this->input->post('researchers[]'));
 				$ids = $this->input->post('researchers[]');
 				for( $i= 0; $i < $len; $i++ ) {
 					$this->research_model->insertParticipant($research_id, $ids[$i], 'researcher');
 				}
+				//Creating new researchers
+				$len = count($this->input->post('new_researcher_id[]'));
+				$ids = $this->input->post('new_researcher_id[]');
+				$names = $this->input->post('new_researcher_name[]');
+				$emails = $this->input->post('new_researcher_email[]');
+				$faculties = $this->input->post('new_researcher_faculty[]');
+				for ( $i = 0; $i < $len; $i++ ) {
+					$user['email'] = $emails[$i];
+					$user['role'] = 'professor';
+					$user['faculty_slug'] = $faculties[$i];
+
+					$participant['user_id'] = $this->user_model->insert($user);
+					$participant['id'] = $ids[$i];
+					$participant['name'] = $names[$i];
+					$participant['slug'] = strtolower( strtr($names[$i], $unwanted_array ) );
+					$this->participant_model->insert($participant);
+				}
+				//Adding new researchers to current research
+				for ( $i = 0; $i < $len; $i++ ) {
+					$this->research_model->insertParticipant($research_id, $ids[$i], 'researcher');
+				}
+
 				//Students
 				$len = count($this->input->post('participants[]'));
 				$ids = $this->input->post('participants[]');
 				for( $i= 0; $i < $len; $i++ ) {
 					$this->research_model->insertParticipant($research_id, $ids[$i], 'student');
 				}
+				//Creating new students
+				$len = count($this->input->post('new_participant_id[]'));
+				$ids = $this->input->post('new_participant_id[]');
+				$names = $this->input->post('new_participant_name[]');
+				$degrees = $this->input->post('new_participant_degree[]');
+				for ( $i = 0; $i < $len; $i++ ) {
+					$participant['id'] = $ids[$i];
+					$participant['name'] = $names[$i];
+					$participant['slug'] = strtolower( strtr($names[$i], $unwanted_array ) );
+					$participant['degree_slug'] = $degrees[$i];
+					$this->participant_model->insert($participant);
+				}
+				//Adding new students to current research
+				for ( $i = 0; $i < $len; $i++ ) {
+					$this->research_model->insertParticipant($research_id, $ids[$i], 'student');
+				}
+
 				//Create research directory structure
 				$research_path = './uploads/researches/'.$research_id;
 				$gallery_path = $research_path.'/gallery';

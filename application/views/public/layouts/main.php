@@ -202,18 +202,18 @@
 		.rpm-faculty h3 a {
 			width: 100%;
 		}
-		.rpm-faculty h2 {
+		.rpm-faculty h2,
+		.rpm-faculty-researchers h2 {
 			padding-bottom: 0.25em;
 			border-bottom: 2px solid #b61b1b;
 			font-size: 1.2em;
 		}
-		.rpm-faculty h3 {
+		.rpm-faculty h3,
+		.rpm-faculty-researchers h3 {
 			font-size: 1em;
-			border-bottom: 1px dashed black;
 		}
 		.rpm-faculty h3 span {
 			background-color: white;
-			padding-bottom: 3px;
 		}
 		.rpm-faculty h3 span.counter {
 			float: right;
@@ -305,6 +305,13 @@
 		.rpm-share .fb:before {
 			background-image: url(<?php echo base_url('uploads/fb.svg');?>);
 		}
+		/**/
+		.rpm-faculty-researchers {
+			margin: 1em 0em 1em 0em;
+		}
+		.rpm-faculty-researchers a {
+			text-decoration: none;
+		}
 	</style>
 </head>
 <body>
@@ -316,7 +323,6 @@
 			<div class="toggle rpm-menu-close"></div>
 			<div class="content">
 				<a href="<?php echo site_url('welcome') ;?>"><h5>Inicio</h5></a>
-				<a href="<?php echo site_url('welcome/research') ;?>"><h5>Investigaciones</h5></a>
 				<a href="<?php echo site_url('welcome/faculty') ;?>"><h5>Facultades</h5></a>
 				<a href="<?php echo site_url('welcome/researcher') ;?>"><h5>Investigadores</h5></a>
 				<hr>

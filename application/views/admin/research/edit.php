@@ -48,7 +48,9 @@
 						rpm-api-result-id="slug"
 						rpm-api-result-human="title"
 						rpm-api-input="subject"
-						rpm-api-cloud="subject-cloud">
+						rpm-api-cloud="subject-cloud"
+						rpm-api-create="true"
+						rpm-api-create-input="new_subject">
 
 					<ul id="subject-list" class="rpm-api-list"></ul>
 				</div>
@@ -214,7 +216,9 @@
 						rpm-api-result-id="id" 
 						rpm-api-result-human="name"
 						rpm-api-input="researchers"
-						rpm-api-cloud="researchers-cloud">
+						rpm-api-cloud="researchers-cloud"
+						rpm-api-create="true"
+						rpm-api-create-function="newResearcher">
 
 					<ul id="researchers-list" class="rpm-api-list"></ul>
 				</div>
@@ -238,7 +242,9 @@
 						rpm-api-result-id="id" 
 						rpm-api-result-human="name"
 						rpm-api-input="participants"
-						rpm-api-cloud="participants-cloud">
+						rpm-api-cloud="participants-cloud"
+						rpm-api-create="true"
+						rpm-api-create-function="newParticipant">
 
 					<ul id="participants-list" class="rpm-api-list"></ul>
 				</div>
@@ -352,4 +358,164 @@
 	</div>
 </form>
 
+<div id="new-researcher" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nuevo Investigador</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="jQuery('#new-researcher').css('display', 'none')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="form-group">
+      		<label>ID/Matrícula</label>
+      		<input type="text" id="new-researcher-id" placeholder="ID/Matrícula">
+      	</div>
+      	<div class="form-group">
+      		<label>Nombre y Apellidos</label>
+      		<input type="text" id="new-researcher-name" placeholder="Nombre completo">
+      	</div>
+      	<div class="form-group">
+      		<label>Correo Eletrónico</label>
+      		<input type="text" id="new-researcher-email" placeholder="Email">
+      	</div>
+      	<div class="form-group">
+      		<label>Facultad</label>
+      		<select id="new-researcher-faculty">
+      			<?php foreach ($faculties as $f) : ?>
+      				<?php if ( $this->session->user->role !== 'admin' ) : ?>
+      					<option value="<?php echo $f->slug;?>" <?php echo ($this->session->user->faculty_slug === $f->slug) ? 'selected="selected"' : '' ;?>><?php echo $f->title;?></option>
+      				<?php endif ?>
+      			<?php endforeach ?>
+      		</select>
+      	</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="jQuery('#new-researcher').css('display', 'none')">Close</button>
+        <button type="button" class="btn btn-primary" onclick="saveResearcher()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="new-participant" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nuevo Participante</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="form-group">
+      		<label>ID/Matrícula</label>
+      		<input type="text" id="new-participant-id" placeholder="ID/Matrícula">
+      	</div>
+      	<div class="form-group">
+      		<label>Nombre y Apellidos</label>
+      		<input type="text" id="new-participant-name" placeholder="Nombre completo">
+      	</div>
+      	<div class="form-group">
+      		<label>Programa Académico</label>
+      		<select id="new-participant-degree">
+      			<?php foreach ($degrees as $d) : ?>
+					<option value="<?php echo $d->slug;?>"><?php echo $d->title;?></option>
+      			<?php endforeach ?>
+      		</select>
+      	</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="jQuery('#new-participant').css('display', 'none')">Close</button>
+        <button type="button" class="btn btn-primary" onclick="saveParticipant()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+	var validEmail = /[a-z0-9.-_]*[@]+[a-z]+[0-9-_]*[.]+[a-z.-_]+/;
+	var validString = /[a-zA-Z]+[ á-úÁ-Úä-üÄ-Üà-ùÀ-ÙñÑ]*/;
+	var validInteger = /[0-9]+/;
+
+	var createFunctions = { 
+		newResearcher: function() {
+			jQuery('#new-researcher').css('display', 'block');
+		},
+		newParticipant: function() {
+			jQuery('#new-participant').css('display', 'block');
+		}
+	};
+	var saveResearcher = function() {
+		var id = jQuery('#new-researcher-id').val();
+		var name = jQuery('#new-researcher-name').val();
+		var email = jQuery('#new-researcher-email').val();
+		var faculty = jQuery('#new-researcher-faculty').val();
+
+		if ( 
+			validInteger.test(id)
+			|| validEmail.test(email) 
+			|| validString.test(name)
+			) {
+			var cloudItem = jQuery('<button class="btn btn-primary rpm-badge" type="button"><span>' + name + '</span>' + '<input type="hidden" name="new_researcher_id[]" value="' + id + '">' + '<input type="hidden" name="new_researcher_name[]" value="' + name + '">' + '<input type="hidden" name="new_researcher_email[]" value="' + email + '">' + '<input type="hidden" name="new_researcher_faculty[]" value="' + faculty + '">' + '</button>');
+			jQuery('#researchers-cloud').append(cloudItem);
+			cloudItem.bind('click', removeNewCloudElement);
+
+			jQuery('#new-researcher-id').val('');
+			jQuery('#new-researcher-name').val('');
+			jQuery('#new-researcher-email').val('');
+
+			jQuery('#new-researcher').css('display', 'none');
+		} else {
+			if ( !validInteger.test(id) ) {
+				jQuery('#new-researcher-id').css('border', '2px solid #dc3545');
+				jQuery('#new-researcher-id').css('padding', '0.25em 0.5em');
+				jQuery('#new-researcher-id').css('border-radius', '5px');
+
+			}
+			if ( !validEmail.test(email) ) {
+				jQuery('#new-researcher-email').css('border', '2px solid #dc3545');
+				jQuery('#new-researcher-email').css('padding', '0.25em 0.5em');
+				jQuery('#new-researcher-email').css('border-radius', '5px');
+			}
+			if ( !validString.test(name) ) {
+				jQuery('#new-researcher-name').css('border', '2px solid #dc3545');
+				jQuery('#new-researcher-name').css('padding', '0.25em 0.5em');
+				jQuery('#new-researcher-name').css('border-radius', '5px');
+			}
+		}
+	};
+	var saveParticipant = function() {
+		var id = jQuery('#new-participant-id').val();
+		var name = jQuery('#new-participant-name').val();
+		var degree = jQuery('#new-participant-degree').val();
+
+		if (
+			validInteger.test(id)
+			|| validString.test(name)
+			) {
+			var cloudItem = jQuery('<button class="btn btn-primary rpm-badge" type="button"><span>' + name + '</span>' + '<input type="hidden" name="new_participant_id[]" value="' + id + '">' + '<input type="hidden" name="new_participant_name[]" value="' + name + '">' + '<input type="hidden" name="new_participant_degree[]" value="' + degree + '">' + '</button>');
+			jQuery('#participants-cloud').append(cloudItem);
+			cloudItem.bind('click', removeNewCloudElement);
+
+			jQuery('#new-participant-id').val('');
+			jQuery('#new-participant-name').val('');
+
+			jQuery('#new-participant').css('display', 'none');
+		} else {
+			if ( !validInteger.test(id) ) {
+				jQuery('#new-participant-id').css('border', '2px solid #dc3545');
+				jQuery('#new-participant-id').css('padding', '0.25em 0.5em');
+				jQuery('#new-participant-id').css('border-radius', '5px');
+
+			}
+			if ( !validString.test(name) ) {
+				jQuery('#new-participant-name').css('border', '2px solid #dc3545');
+				jQuery('#new-participant-name').css('padding', '0.25em 0.5em');
+				jQuery('#new-participant-name').css('border-radius', '5px');
+			}
+		}
+	};
+</script>
 <?php $this->load->view('admin/layouts/footer');?>

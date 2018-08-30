@@ -75,5 +75,18 @@ class User_model extends CI_Model
 		$this->db->delete( $this->table, array('id' => $id) );
 	}
 
+	public function getByFaculty($faculty) {
+		$this->db->where('faculty_slug', $faculty);
+		$query = $this->db->get( $this->table );
+		return $query->result();
+	}
+
+	public function randByFaculty($faculty) {
+		$this->db->where('faculty_slug', $faculty);
+		$this->db->order_by('id', 'RANDOM');
+		$this->db->limit(3);
+		$query = $this->db->get( $this->table );
+		return $query->result();
+	}
 
 }

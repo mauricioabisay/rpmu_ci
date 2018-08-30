@@ -4,6 +4,7 @@
 	<table class="table table-striped">
 		<thead>
 			<tr>
+				<th>ID/Matrícula</th>
 				<th>Nombre</th>
 				<th>Licenciatura</th>
 				<th class="rpm-row-options">Opc.</th>
@@ -12,6 +13,7 @@
 		<tbody>
 			<?php foreach ( $participants as $participant ) : ?>
 				<tr>
+					<td><?php echo $participant->id;?></td>
 					<td><?php echo $participant->name ;?></td>
 					<td><?php echo ($participant->user_id > 0) ? strtoupper($participant->user->role) : $participant->degree->title ;?></td>
 					<td class="rpm-row-options">

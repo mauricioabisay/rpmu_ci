@@ -60,7 +60,7 @@ class Welcome extends CI_Controller {
 		$this->load->view('public/home', compact('researches'));
 	}
 
-	public function faculty($slug = false) {
+	public function faculty($slug = false, $researchers = false) {
 		if(!$slug) {
 			$faculties = $this->faculty_model->get();
 			foreach ($faculties as $f) {
@@ -71,23 +71,31 @@ class Welcome extends CI_Controller {
 			}
 			$this->load->view('public/faculty-list', compact('faculties'));
 		} else {
-			$faculty = $this->faculty_model->find($slug);
+			if(!$researchers) {
+				$faculty = $this->faculty_model->find($slug);
 
-			$start_at = $this->uri->segment(4) ? $this->uri->segment(4) : 0 ;
-			$researches = $this->research_model->getByFaculty($slug, $start_at);
+				$start_at = $this->uri->segment(4) ? $this->uri->segment(4) : 0 ;
+				$researches = $this->research_model->getByFaculty($slug, $start_at);
 
-			foreach ($researches as $r) {
-				$leader = $this->research_model->leader($r->id);
-				$r->leader = $this->user_model->find($leader->user_id);
-				$r->leader->participant = $leader;
-				$r->faculty = $this->faculty_model->find($r->leader->faculty_slug);
+				foreach ($researches as $r) {
+					$leader = $this->research_model->leader($r->id);
+					$r->leader = $this->user_model->find($leader->user_id);
+					$r->leader->participant = $leader;
+					$r->faculty = $this->faculty_model->find($r->leader->faculty_slug);
+				}
+
+				$this->pag_config['base_url'] = site_url('/welcome/faculty/'.$slug.'/');
+				$this->pag_config['total_rows'] = $this->research_model->getByFacultyCount($slug);
+				$this->pagination->initialize($this->pag_config);
+
+				$this->load->view('public/faculty', compact('faculty', 'researches'));
+			} else {
+				$researchers = $this->user_model->getByFaculty($slug);
+				foreach ($researchers as $r) {
+					$r->participant = $this->user_model->findParticipant($r->id);
+				}
+				$this->load->view('public/faculty-researchers-list', compact('researchers'));
 			}
-
-			$this->pag_config['base_url'] = site_url('/welcome/faculty/'.$slug.'/');
-			$this->pag_config['total_rows'] = $this->research_model->getByFacultyCount($slug);
-			$this->pagination->initialize($this->pag_config);
-
-			$this->load->view('public/faculty', compact('faculty', 'researches'));
 		}
 	}
 
@@ -122,18 +130,15 @@ class Welcome extends CI_Controller {
 
 	public function researcher($slug = false) {
 		if(!$slug) {
-			$participants = $this->participant_model->get();
-			foreach ($participants as $p) {
-				$p->user = $this->user_model->find($p->user_id);
-				if ( $p->user ) {
-					$p->faculty = $this->faculty_model->find($p->user->faculty_slug);
-					$p->degree = false;
-				} else {
-					$p->degree = $this->degree_model->find($p->degree_slug);
-					$p->faculty = $this->faculty_model->findByDegree($p->degree_slug);
+			$faculties = $this->faculty_model->get();
+			foreach ($faculties as $faculty) {
+				$researchers = $this->user_model->randByFaculty($faculty->slug);
+				foreach ($researchers as $r) {
+					$r->participant = $this->user_model->findParticipant($r->id);
 				}
+				$faculty->researchers = $researchers;
 			}
-			$this->load->view('public/researcher-list', compact('participants'));
+			$this->load->view('public/researcher-faculty-list', compact('faculties'));
 		} else {
 			$researcher = $this->participant_model->findBySlug($slug);
 			if($researcher) {
