@@ -118,6 +118,12 @@
 		.rpm-pagination .pagination {
 			justify-content: center;
 		}
+		/**/
+		form .required:after {
+			content: '*';
+			color: red;
+			margin: 0 0 0 0.25em;
+		}
 	</style>
 </head>
 <body>

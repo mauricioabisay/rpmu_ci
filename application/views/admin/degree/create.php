@@ -2,12 +2,13 @@
 	<form method="post" action="<?php echo site_url('degree/store');?>">
 		<fieldset>
 			<legend>Nueva Licenciatura</legend>
+			<p><small>Los campos con <span style="color: red">*</span> son obligatorios.</small></p>
 			<div class="form-group">
-				<label for="title">Licenciatura:</label>
+				<label class="required" for="title">Licenciatura:</label>
 				<input type="text" class="form-control" name="title" id="title" value="<?php echo set_value('title');?>">
 			</div>
 			<div class="form-group">
-				<label for="faculty_slug">Facultad:</label>
+				<label class="required" for="faculty_slug">Facultad:</label>
 				<select name="faculty_slug" id="faculty_slug" class="form-control">
 					<?php foreach ( $faculties as $faculty ) : ?>
 						<option 

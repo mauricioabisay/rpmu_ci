@@ -5,8 +5,9 @@
     <input type="hidden" name="participant_id" value="<?php echo $user->participant->id;?>">
     <fieldset>
         <legend>Datos de acceso</legend>
+        <p><small>Los campos con <span style="color: red">*</span> son obligatorios.</small></p>
         <div class="form-group">
-            <label for="name">Nombre:</label>
+            <label for="name" class="required">Nombre:</label>
             <input 
                 id="name" name="name" 
                 value="<?php echo set_value('name', $user->participant->name);?>"
@@ -14,7 +15,7 @@
         </div>
 
         <div class="form-group">
-            <label for="email">Email:</label>
+            <label for="email" class="required">Email:</label>
             <input 
                 id="email" name="email" 
                 value="<?php echo set_value('email', $user->email);?>" 
@@ -22,7 +23,7 @@
         </div>
 
         <div class="form-group">
-            <label for="role">Rol:</label>
+            <label for="role" class="required">Rol:</label>
             <select name="role" id="role" class="role form-control">
                 <option value="admin" <?php echo set_select('role', 'admin', ($user->role=='admin'));?>>Administrador</option>
                 <option value="director" <?php echo set_select('role', 'director', ($user->role=='director'));?>>Director</option>
@@ -34,11 +35,22 @@
         <legend>Datos de departamento</legend>
         
         <div class="form-group">
-            <label for="id">ID/Matricula:</label>
+            <label for="id" class="required">ID/Matricula:</label>
             <input 
                 id="id" name="id" 
                 value="<?php echo set_value('id', $user->participant->id);?>" 
                 type="text" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="faculty_slug" class="required">Facultad:</label>
+            <select name="faculty_slug" id="faculty_slug" class="form-control">
+                <?php foreach ( $faculties as $faculty ) : ?>
+                    <option 
+                        value="<?php echo $faculty->slug ;?>" 
+                        <?php echo set_select('faculty_slug', $faculty->slug, ($faculty->slug == $user->faculty_slug) );?>><?php echo $faculty->title ;?></option>
+                <?php endforeach ?>
+            </select>
         </div>
         
         <div class="form-group">
@@ -58,17 +70,6 @@
             <input type="text" class="form-control" 
                 id="link" name="link" 
                 value="<?php echo set_value('link', $user->participant->link);?>">
-        </div>
-
-        <div class="form-group">
-            <label for="faculty_slug">Facultad:</label>
-            <select name="faculty_slug" id="faculty_slug" class="form-control">
-                <?php foreach ( $faculties as $faculty ) : ?>
-                    <option 
-                        value="<?php echo $faculty->slug ;?>" 
-                        <?php echo set_select('faculty_slug', $faculty->slug, ($faculty->slug == $user->faculty_slug) );?>><?php echo $faculty->title ;?></option>
-                <?php endforeach ?>
-            </select>
         </div>
     </fieldset>
     

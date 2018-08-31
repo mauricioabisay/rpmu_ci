@@ -3,15 +3,28 @@
 	<form method="post" action="<?php echo site_url( 'participant/store' ) ;?>" enctype="multipart/form-data">
 		<fieldset>
 			<legend>Nuevo Participante</legend>
-			
+			<p><small>Los campos con <span style="color: red">*</span> son obligatorios.</small></p>
 			<div class="form-group">
-				<label for="id">ID/Matricula:</label>
+				<label for="id" class="required">ID/Matricula:</label>
 				<input type="text" class="form-control" id="id" name="id" value="<?php echo set_value('id');?>">
 			</div>
 
 			<div class="form-group">
-				<label for="name">Nombre:</label>
+				<label for="name" class="required">Nombre:</label>
 				<input type="text" class="form-control" name="name" id="name" value="<?php echo set_value('name');?>">
+			</div>
+
+			<div class="form-group">
+				<label for="faculty_slug" class="required">Licenciatura:</label>
+				<select name="degree_slug" id="degree_slug" class="form-control">
+					<?php foreach ( $degrees as $degree ) : ?>
+						<option 
+							value="<?php echo $degree->slug ;?>"
+							<?php echo set_select('degree_slug', $degree->slug);?>>
+							<?php echo $degree->title ;?>
+						</option>
+					<?php endforeach ?>
+				</select>
 			</div>
 
 			<div class="form-group">
@@ -30,20 +43,6 @@
 				<label for="link">Link:</label>
 				<input type="text" class="form-control" id="link" name="link" value="<?php echo set_value('link');?>">
 			</div>
-
-			<div class="form-group">
-				<label for="faculty_slug">Licenciatura:</label>
-				<select name="degree_slug" id="degree_slug" class="form-control">
-					<?php foreach ( $degrees as $degree ) : ?>
-						<option 
-							value="<?php echo $degree->slug ;?>"
-							<?php echo set_select('degree_slug', $degree->slug);?>>
-							<?php echo $degree->title ;?>
-						</option>
-					<?php endforeach ?>
-				</select>
-			</div>
-
 		</fieldset>
 		<input type="submit" class="btn btn-primary" value="Guardar">
 	</form>

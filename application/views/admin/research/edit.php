@@ -31,13 +31,19 @@
 		<div class="tab-pane fade show active" id="general-info" role="tabpanel">
 			<fieldset>
 				<legend>Información General</legend>
+				<p><small>Los campos con <span style="color: red">*</span> son obligatorios.</small></p>
 				<div class="form-group">
-					<label for="title">Título:</label>
+					<label for="title" class="required">Título:</label>
 					<input type="text" class="form-control" id="title" name="title" value="<?php echo set_value('title', $research->title) ;?>">
 				</div>
 				
 				<div class="form-group">
-					<label for="subject">Tema:</label>
+					<label for="abstract" class="required">Síntesis:</label>
+					<textarea name="abstract" id="abstract" cols="30" rows="3" class="form-control"><?php echo set_value('abstract', $research->abstract) ;?></textarea>
+				</div>
+
+				<div class="form-group">
+					<label for="subject">Temas:</label>
 					
 					<input 
 						type="text" 
@@ -61,11 +67,6 @@
 						<input type="hidden" name="subject[]" id="<?php echo $subject->slug ;?>" value="<?php echo $subject->slug ;?>">
 					<?php endforeach ?>
 				</div>
-
-				<div class="form-group">
-					<label for="abstract">Síntesis:</label>
-					<textarea name="abstract" id="abstract" cols="30" rows="3" class="form-control"><?php echo set_value('abstract', $research->abstract) ;?></textarea>
-				</div>
 				
 				<div class="form-group">
 					<label for="featured-image">Imagen de portada:</label>
@@ -79,6 +80,7 @@
 		<div class="tab-pane fade" id="requirements">
 			<fieldset>
 				<legend>Requisitos y Equipamiento</legend>
+				<p><small>Los campos con <span style="color: red">*</span> son obligatorios.</small></p>
 				<?php 
 					$len = (is_array(set_value('requirement_title[]'))) ? count(set_value('requirement_title[]')) : 0;
 				?>
@@ -135,6 +137,7 @@
 		<div class="tab-pane fade" id="goals">
 			<fieldset>
 				<legend>Metas</legend>
+				<p><small>Los campos con <span style="color: red">*</span> son obligatorios.</small></p>
 				<?php 
 					$len = (is_array(set_value('goal_title'))) ? count(set_value('goal_title')) : 0;
 				?>
@@ -206,6 +209,7 @@
 		<div class="tab-pane fade" id="participants">
 			<fieldset>
 				<legend>Investigadores</legend>
+				<p><small>Los campos con <span style="color: red">*</span> son obligatorios.</small></p>
 				<div class="form-group">
 					<input 
 						type="text" 
@@ -261,7 +265,7 @@
 		<div class="tab-pane fade" id="development" role="tabpanel">
 			<fieldset>
 				<legend>Desarrollo</legend>
-
+				<p><small>Los campos con <span style="color: red">*</span> son obligatorios.</small></p>
 				<div class="form-group">
 					<label for="description">Descripción detallada:</label>
 					<textarea name="description" id="description" cols="30" rows="20" class="form-control" placeholder="Descripción detallada del proyecto"><?php echo set_value('description', $research->description);?></textarea>
@@ -278,7 +282,7 @@
 		<div class="tab-pane fade" id="gallery" role="tabpanel">
 			<fieldset>
 				<legend>Galería</legend>
-				
+				<p><small>Los campos con <span style="color: red">*</span> son obligatorios.</small></p>
 				<div class="form-group rpm-multi-file-container">
 					<label>Imágenes:</label>
 					
@@ -305,6 +309,7 @@
 		<div class="tab-pane fade rpm-citations-tab" id="citations" role="tabpanel">
 			<fieldset>
 				<legend>Publicaciones</legend>
+				<p><small>Los campos con <span style="color: red">*</span> son obligatorios.</small></p>
 				<?php foreach ( $research->citations as $citation ) : ?>
 					<div class="form-inline rpm-dynamic-list-item" rpm-dynamic-list-prefix="citation">
 						<input class="delete" type="hidden" name="citation_delete[]" value="-1">
