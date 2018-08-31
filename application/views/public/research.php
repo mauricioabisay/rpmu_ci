@@ -46,11 +46,12 @@
 
 	<?php if( count($research->requirements) > 0 ) : ?>
 		<div class="row">
-			<div class="col">
+			<div class="col requirements">
 				<h2>Materiales</h2>
 				<ul>
 					<?php foreach ($research->requirements as $r) : ?>
-						<li><?php echo $r->title;?>: <?php echo $r->description;?></li>
+						<li><?php echo $r->title;?></li>
+						<div><?php echo $r->description;?></div>
 					<?php endforeach ?>
 				</ul>
 			</div>
@@ -59,11 +60,12 @@
 
 	<?php if( count($research->goals) > 0 ) : ?>
 		<div class="row">
-			<div class="col">
+			<div class="col goals">
 				<h2>Objetivos</h2>
 				<ul>
 					<?php foreach ($research->goals as $g) : ?>
-						<li><?php echo $g->title;?>: <?php echo $g->description;?></li>
+						<li><?php echo $g->title;?></li>
+						<div><?php echo $g->description;?></div>
 					<?php endforeach ?>
 				</ul>
 			</div>

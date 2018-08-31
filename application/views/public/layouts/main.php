@@ -83,6 +83,10 @@
 		.rpm-research .degrees .list span:last-child::after {
 			content: '';
 		}
+		.rpm-research .goals ul li,
+		.rpm-research .requirements ul li {
+			font-weight: 400;
+		}
 		/****/
 		.rpm-participants {
 			margin: 2em 0;

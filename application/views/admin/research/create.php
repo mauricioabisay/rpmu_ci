@@ -94,10 +94,10 @@
 						<input type="hidden" class="delete" name="requirement_delete[]" value="<?php echo set_value('requirement_delete')[$i] ;?>">
 						<input type="hidden" class="id" name="requirement_id[]" value="<?php echo set_value('requirement_id')[$i] ;?>">
 						<div class="form-group col-md-4">
-							<input type="text" class="form-control" name="requirement_title[]" placeholder="Título" value="<?php echo set_value('requirement_title')[$i] ;?>">
+							<input type="text" class="form-control" name="requirement_title[]" placeholder="Requerimiento, ej. Laptop" value="<?php echo set_value('requirement_title')[$i] ;?>">
 						</div>
 						<div class="form-group col-md-6">
-							<textarea name="requirement_description[]" class="form-control" cols="30" rows="3" placeholder="Descripción"><?php echo set_value('requirement_description')[$i] ;?></textarea>
+							<textarea name="requirement_description[]" class="form-control" cols="30" rows="3" placeholder="Detalle, ej. 4GB RAM, OS Linux"><?php echo set_value('requirement_description')[$i] ;?></textarea>
 						</div>
 						<div class="form-group col-md-1">
 							<input class="btn btn-primary minus" type="button" value="-">
@@ -109,10 +109,10 @@
 					<input type="hidden" class="delete" name="requirement_delete[]" value="-1">
 					<input type="hidden" class="id" name="requirement_id[]" value="-1">
 					<div class="form-group col-md-4">
-						<input type="text" class="form-control" name="requirement_title[]" placeholder="Título">
+						<input type="text" class="form-control" name="requirement_title[]" placeholder="Requerimiento, ej. Laptop">
 					</div>
 					<div class="form-group col-md-6">
-						<textarea name="requirement_description[]" class="form-control" cols="30" rows="3" placeholder="Descripción"></textarea>
+						<textarea name="requirement_description[]" class="form-control" cols="30" rows="3" placeholder="Detalle, ej. 4GB RAM, OS Linux "></textarea>
 					</div>
 					<div class="form-group col-md-1">
 						<input class="btn btn-primary plus" type="button" value="+">
@@ -137,10 +137,10 @@
 						<input class="delete" type="hidden" name="goal_delete[]" value="<?php echo set_value('goal_delete')[$i] ;?>">
 						<input class="id" type="hidden" name="goal_id[]" value="<?php echo set_value('goal_id')[$i] ;?>">
 						<div class="form-group col-md-4">
-							<input type="text" class="form-control" name="goal_title[]" placeholder="Título" value="<?php echo set_value('goal_title')[$i] ;?>">
+							<input type="text" class="form-control" name="goal_title[]" placeholder="Meta, ej.Mejorar presentación" value="<?php echo set_value('goal_title')[$i] ;?>">
 						</div>
 						<div class="form-group col-md-6">
-							<textarea name="goal_description[]" class="form-control" cols="30" rows="3" placeholder="Descripción"><?php echo set_value('goal_description')[$i] ;?></textarea>
+							<textarea name="goal_description[]" class="form-control" cols="30" rows="3" placeholder="Detalle, ej.Agregar más imágenes a la presentación"><?php echo set_value('goal_description')[$i] ;?></textarea>
 						</div>
 						<div class="form-group col-md-1">
 							<input class="btn btn-primary minus" type="button" value="-">
@@ -152,10 +152,10 @@
 					<input class="delete" type="hidden" name="goal_delete[]" value="-1">
 					<input class="id" type="hidden" name="goal_id[]" value="-1">
 					<div class="form-group col-md-4">
-						<input type="text" class="form-control" name="goal_title[]" placeholder="Título">
+						<input type="text" class="form-control" name="goal_title[]" placeholder="Meta, ej.Mejorar presentación">
 					</div>
 					<div class="form-group col-md-6">
-						<textarea name="goal_description[]" class="form-control" cols="30" rows="3" placeholder="Descripción"></textarea>
+						<textarea name="goal_description[]" class="form-control" cols="30" rows="3" placeholder="Detalle, ej.Agregar más imágenes a la presentación"></textarea>
 					</div>
 					<div class="form-group col-md-1">
 						<input class="btn btn-primary plus" type="button" value="+">
@@ -253,7 +253,7 @@
 					<input class="delete" type="hidden" name="citation_delete[]" value="-1">
 					<input class="id" type="hidden" name="citation_id[]" value="-1">
 					<div class="form-group col-md-4">
-						<textarea name="citation_description[]" class="form-control" cols="30" rows="3" placeholder="Descripción"></textarea>
+						<textarea name="citation_description[]" class="form-control" cols="30" rows="3" placeholder="Publicación, ej. Álgebra Lineal 5a edición, Grossman"></textarea>
 					</div>
 					<div class="form-group col-md-3 type">
 						<p>
