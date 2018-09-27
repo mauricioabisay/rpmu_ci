@@ -3,6 +3,7 @@
 <head>
 	<title></title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/startbootstrap/css/sb-admin.min.css');?>">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/4.4.0/font/octicons.css">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -126,9 +127,9 @@
 		}
 	</style>
 </head>
-<body>
-	
-	<nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
+
+<body class="fixed-nav bg-light">	
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 		<?php if ( isset($this->session->user) ) : ?>
 			<a class="navbar-brand" href="<?php echo site_url('admin') ?>">R.P.M.</a>
 		<?php else : ?>
