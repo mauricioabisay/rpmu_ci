@@ -43,4 +43,16 @@ class Api extends CI_Controller {
 		}
 		exit();
 	}
+
+	public function participant_exists() {
+		$this->load->database();
+		$this->db->where('id = '.$this->input->get('string'));
+		$query = $this->db->get('participants');
+		if ( $query->num_rows() > 0 ) {
+			print_r(json_encode(array('exists' => true)));
+		} else {
+			print_r(json_encode(array('exists' => false)));
+		}
+		exit();
+	}
 }

@@ -21,6 +21,8 @@ Apache >= 2
 
 ### Setup
 
+#### Basic
+
 To continue/contribute to project development you will need:
 
 - Docker
@@ -61,6 +63,24 @@ Then
 `docker-compose run`
 
 And you are all set to code.
+
+#### Extra
+
+For a more smooth development experience you can use the Gulp workflow included with the project. For this you need to install NodeJS and npm.
+
+Then run the command
+
+`npm install`
+
+After the dependencies have been installed, run
+
+`gulp`
+
+And that is it.
+
+Remember the gulp server runs on port 3001, take a close look to browsers URL after logging in and out from the admin dashboard.
+
+The project sass and js files are and should be placed on the `resources/_dev` folder, either in public or admin subfolders, accordingly
 
 ### Contact
 

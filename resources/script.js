@@ -1,0 +1,2 @@
+jQuery(document).ready(function(){jQuery(".rpm-menu-close").click(function(){jQuery(this).parent().css("display","none")}),jQuery(".rpm-menu-open").click(function(){console.log("hola"),jQuery(this).parents(".rpm-menu").find(".rpm-menu-toggle").css("display","block")})}),window.onload=function(){jQuery(".rpm-researches-list").masonry({itemSelector:".rpm-research-item"}),jQuery(".rpm-research-carousel").slick({dots:!0})};
+//# sourceMappingURL=script.js.map
