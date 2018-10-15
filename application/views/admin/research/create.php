@@ -294,15 +294,19 @@
       <div class="modal-body">
       	<div class="form-group">
       		<label>ID/Matrícula</label>
-      		<input type="text" id="new-researcher-id" placeholder="ID/Matrícula">
+      		<input type="text" id="new-researcher-id" placeholder="ID/Matrícula" class="form-control">
+      		<div id="check-researcher-id-input" class="invalid-feedback">ID/Matrícula debe ser un texto con sólo números.</div>
+      		<div id="check-researcher-id-exists" class="invalid-feedback">ID/Matrícula ya existe.</div>
       	</div>
       	<div class="form-group">
       		<label>Nombre y Apellidos</label>
-      		<input type="text" id="new-researcher-name" placeholder="Nombre completo">
+      		<input type="text" id="new-researcher-name" placeholder="Nombre completo" class="form-control">
+      		<div id="check-researcher-name-input" class="invalid-feedback">Nombre y Apellidos deben contener solo carácteres alfabéticos.</div>
       	</div>
       	<div class="form-group">
       		<label>Correo Eletrónico</label>
-      		<input type="text" id="new-researcher-email" placeholder="Email">
+      		<input type="text" id="new-researcher-email" placeholder="Email" class="form-control">
+      		<div id="check-researcher-email-input" class="invalid-feedback">Correo electrónico inválido.</div>
       	</div>
       	<div class="form-group">
       		<label>Facultad</label>
@@ -310,14 +314,16 @@
       			<?php foreach ($faculties as $f) : ?>
       				<?php if ( $this->session->user->role !== 'admin' ) : ?>
       					<option value="<?php echo $f->slug;?>" <?php echo ($this->session->user->faculty_slug === $f->slug) ? 'selected="selected"' : '' ;?>><?php echo $f->title;?></option>
+      				<?php else : ?>
+      					<option value="<?php echo $f->slug;?>"><?php echo $f->title;?></option>
       				<?php endif ?>
       			<?php endforeach ?>
       		</select>
       	</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="jQuery('#new-researcher').css('display', 'none')">Close</button>
-        <button type="button" class="btn btn-primary" onclick="saveResearcher()">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="jQuery('#new-researcher').css('display', 'none')">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="saveResearcher()">Guardar</button>
       </div>
     </div>
   </div>
@@ -328,18 +334,21 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Nuevo Participante</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="jQuery('#new-participant').css('display', 'none')">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
       	<div class="form-group">
       		<label>ID/Matrícula</label>
-      		<input type="text" id="new-participant-id" placeholder="ID/Matrícula">
+      		<input type="text" id="new-participant-id" placeholder="ID/Matrícula" class="form-control">
+      		<div id="check-participant-id-input" class="invalid-feedback">ID/Matrícula debe ser un texto con sólo números.</div>
+      		<div id="check-participant-id-exists" class="invalid-feedback">ID/Matrícula ya existe.</div>
       	</div>
       	<div class="form-group">
       		<label>Nombre y Apellidos</label>
-      		<input type="text" id="new-participant-name" placeholder="Nombre completo">
+      		<input type="text" id="new-participant-name" placeholder="Nombre completo" class="form-control">
+      		<div id="check-participant-name-input" class="invalid-feedback">Nombre y Apellidos deben contener solo carácteres alfabéticos.</div>
       	</div>
       	<div class="form-group">
       		<label>Programa Académico</label>
@@ -351,51 +360,14 @@
       	</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="jQuery('#new-participant').css('display', 'none')">Close</button>
-        <button type="button" class="btn btn-primary" onclick="saveParticipant()">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="jQuery('#new-participant').css('display', 'none')">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="saveParticipant()">Guardar</button>
       </div>
     </div>
   </div>
 </div>
 
 <script type="text/javascript">
-	var createFunctions = { 
-		newResearcher: function() {
-			jQuery('#new-researcher').css('display', 'block');
-		},
-		newParticipant: function() {
-			jQuery('#new-participant').css('display', 'block');
-		}
-	};
-	var saveResearcher = function() {
-		var id = jQuery('#new-researcher-id').val();
-		var name = jQuery('#new-researcher-name').val();
-		var email = jQuery('#new-researcher-email').val();
-		var faculty = jQuery('#new-researcher-faculty').val();
-
-		var cloudItem = jQuery('<button class="btn btn-primary rpm-badge" type="button"><span>' + name + '</span>' + '<input type="hidden" name="new_researcher_id[]" value="' + id + '">' + '<input type="hidden" name="new_researcher_name[]" value="' + name + '">' + '<input type="hidden" name="new_researcher_email[]" value="' + email + '">' + '<input type="hidden" name="new_researcher_faculty[]" value="' + faculty + '">' + '</button>');
-		jQuery('#researchers-cloud').append(cloudItem);
-		cloudItem.bind('click', removeNewCloudElement);
-
-		jQuery('#new-researcher-id').val('');
-		jQuery('#new-researcher-name').val('');
-		jQuery('#new-researcher-email').val('');
-
-		jQuery('#new-researcher').css('display', 'none');
-	};
-	var saveParticipant = function() {
-		var id = jQuery('#new-participant-id').val();
-		var name = jQuery('#new-participant-name').val();
-		var degree = jQuery('#new-participant-degree').val();
-
-		var cloudItem = jQuery('<button class="btn btn-primary rpm-badge" type="button"><span>' + name + '</span>' + '<input type="hidden" name="new_participant_id[]" value="' + id + '">' + '<input type="hidden" name="new_participant_name[]" value="' + name + '">' + '<input type="hidden" name="new_participant_degree[]" value="' + degree + '">' + '</button>');
-		jQuery('#participants-cloud').append(cloudItem);
-		cloudItem.bind('click', removeNewCloudElement);
-
-		jQuery('#new-participant-id').val('');
-		jQuery('#new-participant-name').val('');
-
-		jQuery('#new-participant').css('display', 'none');
-	};
+	var url = '<?php echo site_url('api/participant_exists');?>';
 </script>
 <?php $this->load->view('admin/layouts/footer');?>

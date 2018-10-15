@@ -403,8 +403,8 @@
       	</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="jQuery('#new-researcher').css('display', 'none')">Close</button>
-        <button type="button" class="btn btn-primary" onclick="saveResearcher()">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="jQuery('#new-researcher').css('display', 'none')">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="saveResearcher()">Guardar</button>
       </div>
     </div>
   </div>
@@ -415,7 +415,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Nuevo Participante</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="jQuery('#new-participant').css('display', 'none')">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -441,12 +441,13 @@
       	</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="jQuery('#new-participant').css('display', 'none')">Close</button>
-        <button type="button" class="btn btn-primary" onclick="saveParticipant()">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="jQuery('#new-participant').css('display', 'none')">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="saveParticipant()">Guardar</button>
       </div>
     </div>
   </div>
 </div>
+
 <script type="text/javascript">
 	var url = '<?php echo site_url('api/participant_exists');?>';
 </script>
